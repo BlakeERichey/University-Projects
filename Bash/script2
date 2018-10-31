@@ -1,7 +1,7 @@
 #!/bin/bash
-#read from file and print contents
+#read from file and print average words per line
 file=myfile.txt
 words=`cat myfile.txt | wc -w`
 lines=`cat myfile.txt | wc -l`
 ans=$(echo "scale=2; $words / $lines" | bc)
-echo $ans
+echo "The average words per line of myfile.txt is $ans"
