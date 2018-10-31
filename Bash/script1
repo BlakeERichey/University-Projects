@@ -1,0 +1,6 @@
+#!/bin/bash
+#Calculate the size of the users home directory and date
+
+size=`du -sh $HOME`
+currentDate=`date`
+echo "$currentDate $size" >> homesize.log

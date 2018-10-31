@@ -1,0 +1,7 @@
+#!/bin/bash
+#read from file and print contents
+file=myfile.txt
+words=`cat myfile.txt | wc -w`
+lines=`cat myfile.txt | wc -l`
+echo $($words/$lines | bc)
+
