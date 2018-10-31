@@ -1,0 +1,19 @@
+#!/bin/bash
+#makes backup on 31st of every month
+day=`date +%d`
+if [ $day -ne 31 ]
+then
+    echo "Nothing was done."
+elif [ $day -eq 31 ]
+then
+    if [ -d /$HOME/Backup ]
+    then
+	cd /$HOME/Backup
+	else
+        mkdir /$HOME/Backup
+        cd /$HOME/Backup
+    fi
+    echo y | tar -cf backup.tar /$HOME
+    gzip backup.tar
+fi
+

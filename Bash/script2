@@ -3,5 +3,5 @@
 file=myfile.txt
 words=`cat myfile.txt | wc -w`
 lines=`cat myfile.txt | wc -l`
-echo $($words/$lines | bc)
-
+ans=$(echo "scale=2; $words / $lines" | bc)
+echo $ans
