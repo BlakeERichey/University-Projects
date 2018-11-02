@@ -1,4 +1,4 @@
-#COSC 4322 Python programming projects
+# COSC 4322 Python programming projects
 
 This repository is a compilation of some of my Python programs.
 
