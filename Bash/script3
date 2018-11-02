@@ -1,0 +1,25 @@
+#!/bin/bash
+#makes backup on 31st of every month
+day=`date +%d`
+if [ $day -ne 31 ]
+then
+    echo "Nothing was done."
+elif [ $day -eq 31 ]
+then
+    #if ~/Backup doesnt exist, create it then move to that directory.
+    if [ -d /$HOME/Backup ]
+    then
+	cd /$HOME/Backup
+	else
+        mkdir /$HOME/Backup
+        cd /$HOME/Backup
+    fi
+    #if backup already exists, replace it
+    if [ -f ./backup.tar.gz ]
+    then
+	rm ./backup.tar.gz
+    fi
+    tar -cf backup.tar /$HOME
+    gzip backup.tar
+fi
+

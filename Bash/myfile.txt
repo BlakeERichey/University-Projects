@@ -1,2 +1,4 @@
-Hi this is an example version.
-I hope it works well.
+This is an example.
+I hope it works!
+Yes!
+It does!
