@@ -1,6 +1,6 @@
 import random
 
-enemyShipsCoordinates = [(1,1), (1,2), (1,3), (1,4), (1,5)]
+enemyShipsCoordinates = [(1,1), (2,1), (3,1), (4,1), (5,1)]
 
 
 #creates coordinates system and stores it in enemyBattlefield variable
@@ -15,6 +15,7 @@ enemyBattlefield = sorted(list(set(coordinates)))
 #Keeps up with already guess locations so AI cant shoot the same
 #place twice and where has yet to be shot
 alreadyGuessed = []
+hitCoordinates = []
 availableGuesses = enemyBattlefield
 flagHit = 0
 flagSunk = 0
@@ -29,29 +30,30 @@ def helper_randomGuess():
     guess = random.choice(availableGuesses)
     availableGuesses.remove(guess)
     alreadyGuessed.append(guess)
-    if helper_didhit(guess):
-        print("Hit!")
-    else:
-        print("Miss")
+    helper_didhit(guess)
     return guess
 
-def helper_afterhitGuess(guess):
-    pass
+def helper_afterhitGuess():
+    guess = (hitCoordinates[len(hitCoordinates)-1][0] - 1, hitCoordinates[len(hitCoordinates)-1][1])
+    helper_didhit(guess)
+    return guess
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
     if guess in enemyShipsCoordinates:
-        flagHit = 1
-        return True
+        hitCoordinates.append(guess)
+        print("Hit!")
+        #return True
     else:
-        flagHit = 0
-        return False
+        print("Miss")
+        #return False
 
+#Logic controller function. Will decide what kind of guess to perform
 def helper_attack():
-    if hitFlag = 1:
-        helper_afterhitGuess()
-    elif hitFlag = 0:
-        helper_randomGuess()
+    if not(len(hitCoordinates) == 0):
+        return helper_afterhitGuess()
+    else:
+        return helper_randomGuess()
     
 
-print('my guess is ' + str(helper_randomGuess()) + str(flagHit))
+print('my guess is ' + str(helper_attack()) + str(flagHit))
