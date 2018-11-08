@@ -49,13 +49,29 @@ def helper_afterhitGuess():
     helper_didhit(guess)
     return guess
 
-#interprets hitCoordinates to find orientation and sets the 
-def findOrientation():
-    pass
+#interprets hitCoordinates to find orientation and sets the orientation
+def findOrientation(guess):
+    if guess[0] == hitCoordinates[0][0]:
+        orientation = "VERTICAL" #not saving orientation to global variable
+        print("I made it here " + orientation)
+    elif guess[1] == hitCoordinates[0][1]:
+        orientation = "HORIZONTAL"
+        print("I made it here " + orientation)
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
+    if (guess in enemyShipsCoordinates and len(hitCoordinates) == 1):
+        findOrientation(guess)
+        print("Orientation is " + orientation)
     if guess in enemyShipsCoordinates:
+        if (len(hitCoordinates) == 0):
+            smartToGuess.append((guess[0] - 1, guess[1])) #adds cooridinate to left of initial hit to list
+            smartToGuess.append((guess[0] + 1, guess[1])) #adds cooridinate to right of initial hit to list
+            smartToGuess.append((guess[0], guess[1] - 1)) #adds cooridinate up of initial hit to list
+            smartToGuess.append((guess[0], guess[1] + 1)) #adds cooridinate down of initial hit to list
+            for x in smartToGuess:
+                if x not in availableGuesses:
+                    smartToGuess.remove(x)
         hitCoordinates.append(guess)
         print("Hit!")
         #return True
@@ -65,15 +81,10 @@ def helper_didhit(guess):
 
 #Logic controller function. Will decide what kind of guess to perform
 def helper_attack():
-    if (len(hitCoordinates) == 1):
-        smartToGuess.append((hitCoordinates[len(hitCoordinates)-1][0] - 1, hitCoordinates[len(hitCoordinates)-1][1])) #adds cooridinate to left of initial hit to list
-        smartToGuess.append((hitCoordinates[len(hitCoordinates)-1][0] + 1, hitCoordinates[len(hitCoordinates)-1][1])) #adds cooridinate to right of initial hit to list
-        smartToGuess.append((hitCoordinates[len(hitCoordinates)-1][0], hitCoordinates[len(hitCoordinates)-1][1] - 1)) #adds cooridinate up of initial hit to list
-        smartToGuess.append((hitCoordinates[len(hitCoordinates)-1][0], hitCoordinates[len(hitCoordinates)-1][1] + 1)) #adds cooridinate down of initial hit to list
     if not(len(hitCoordinates) == 0):
         return helper_afterhitGuess()
     else:
         return helper_randomGuess()
     
 
-print('my guess is ' + str(helper_attack()) + str(flagHit))
+print('my guess is ' + str(helper_attack()))
