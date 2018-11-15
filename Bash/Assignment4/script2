@@ -1,0 +1,19 @@
+#!/bin/bash
+#read from text file. add values and computer average per line.
+
+file=$1
+IFS=,
+if [ -e $file ]
+then
+	cat $file | while read -r line
+	do
+		total=0
+		for x in $line
+		do
+			total=$(echo "scale=3; ($total+$x)" | bc)
+		done
+		echo  "Total is $total"
+	done
+else
+	echo "File does not exist"
+fi
