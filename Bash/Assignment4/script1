@@ -1,0 +1,14 @@
+#!/bin/bash
+#read input from user during script call and determine if the number is prime
+
+isPrime=$1
+upperLimit=$(echo "(sqrt($isPrime))" | bc) 
+for (( count=2; count <= $(($upperLimit + 1)); count++ ))
+do
+	if [ $(($isPrime % $count)) -eq 0 ] 
+	then
+		echo "$isPrime is not prime."
+		exit
+	fi
+done
+echo "$isPrime is prime."
