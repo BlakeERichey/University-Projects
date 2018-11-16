@@ -11,21 +11,25 @@
 #should be 0.00.
 #o Display an appropriate error message if the file does not exist.
 
+if [ ! -e $1 ]
+then
+	echo "File not found."
+	exit
+fi
+
 for val in "$@"
 do
-	if [ $val = $1 ]
+	if [ $val != $1 ]
 	then
-		>>/dev/null
-	else
+		total=0.00
 		for line in $(grep $val $1)
 		do
-			if [ $line = $val ]
+			if [ $line != $val ]
 			then
-				>>/dev/null
-			else
-				echo $line
+				total=$(echo "scale=2; ($total+$line)" | bc)
 			fi
 		done
+		echo "$val's total is $total"
 	fi
 
 done
