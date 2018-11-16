@@ -87,7 +87,7 @@ public class LinkedList {
 		{
 			if(tempNode.getData().substring(0, 1).equals("q"))
 			{
-				System.out.println("Q encountered. exiting function call.");
+				//System.out.println("Q encountered. exiting function call.");
 				break;
 			}
 			//System.out.println("just testing" + tempNode.getData().substring(0, 1));
@@ -144,15 +144,18 @@ public class LinkedList {
 	{
 		String functionName = line.substring(2, line.length());
 		Node currentNode = head;
-		System.out.println("Function name in parseX is " + functionName);
+		//System.out.println("Function name in parseX is " + functionName);
 		while(currentNode.getNext() != null) { //getting hung up on q after f alpha
-			if (currentNode.getData().substring(2, currentNode.getData().length()).equals(functionName)) //look for node that has function named the same as we are looking for
+			if (currentNode.getData().substring(0, 1).equals("f")) //look for node that has function named the same as we are looking for
 			{
-				runFunction(currentNode);
-				break;
+				if (currentNode.getData().substring(2, currentNode.getData().length()).equals(functionName))
+				{
+					runFunction(currentNode);
+					break;
+				}
 			}
 			currentNode = currentNode.getNext();
-			System.out.println(currentNode.getData());
+			//System.out.println(currentNode.getData());
 		}
 
 	}
