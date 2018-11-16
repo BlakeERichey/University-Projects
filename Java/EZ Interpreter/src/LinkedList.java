@@ -12,7 +12,8 @@ public class LinkedList {
 		return (head == null);
 	}
 	
-	public void addItem(String x) {
+	public void addItem(String x) 
+	{
 		if (isEmpty()) 
 		{
 			head = new Node(x);
@@ -25,6 +26,33 @@ public class LinkedList {
 			tail = tempNode;
 		}
 	
+	}
+	
+	public String removeNode(Node item)
+	{
+		String tempString = item.getData();
+		if (item == tail)
+		{
+			//find node prior to tail
+			Node currentNode = head;
+			while(currentNode.getNext() != tail) 
+			{
+				currentNode = currentNode.getNext();
+			}
+			tail = currentNode;
+			tail.setNext(null);
+		}
+		else
+		{
+			//find node prior to item
+			Node currentNode = head;
+			while(currentNode.getNext() != item) 
+			{
+				currentNode = currentNode.getNext();
+			}
+			currentNode.setNext(item.getNext());
+		}
+		return tempString;
 	}
 
 	public String getString() {
@@ -89,6 +117,20 @@ public class LinkedList {
 	
 	public void parseC(String line)
 	{
-		
+		stackInfixToPostfix(line);
+	}
+	
+	public String stackInfixToPostfix(String line) 
+	{
+//		String[] tempString = new String[line.length()];
+//		String[] tempStack = new String[line.length()];
+//		for(int index = 0; index < line.length(); index++)
+//		{
+//			if (!(Character.isDigit(line.charAt(index))))
+//			{
+//				tempStack
+//			}
+//		}
+		return "";
 	}
 }
