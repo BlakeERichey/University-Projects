@@ -1,0 +1,7 @@
+#To archive a gzip a file:
+tar -cvf myfile.tar file1 file2 file3
+#or
+tar -cvf myfile.tar /myDirectory
+
+#to list contents of a tar
+tar -tf myfile.tar
