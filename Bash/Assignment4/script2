@@ -3,17 +3,24 @@
 
 file=$1
 IFS=,
+total=0
+acc=0
 if [ -e $file ]
 then
-	cat $file | while read -r line
+
+	while read -r line
 	do
-		total=0
+
 		for x in $line
 		do
+			(( acc += 1 ))
 			total=$(echo "scale=3; ($total+$x)" | bc)
 		done
-		echo  "Total is $total"
-	done
+
+	done < $file
 else
 	echo "File does not exist"
 fi
+echo  "Total is $total"
+avg=$(echo "scale=3; ($total/$acc)" | bc)
+echo "Average is $total/$acc = $avg"
