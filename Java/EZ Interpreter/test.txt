@@ -1,0 +1,15 @@
+f alpha
+p MISSISSIPPI...
+q
+f beta
+c (4+6)/5
+x alpha
+c (9*4-9)/9
+x alpha
+q
+f main
+c (3+7)/(5*2)
+x alpha
+x beta
+p GO!
+q
