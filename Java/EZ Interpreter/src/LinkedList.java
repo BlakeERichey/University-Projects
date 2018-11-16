@@ -80,11 +80,17 @@ public class LinkedList {
 		return null;
 	}
 	
-	public void runMain() 
+	public void runFunction(Node functionNode) 
 	{
-		Node tempNode = findMain().getNext();
+		Node tempNode = functionNode.getNext();
 		while(tempNode.getNext() != null) //loop will continue until it reaches q then end
 		{
+			if(tempNode.getData().substring(0, 1).equals("q"))
+			{
+				System.out.println("Q encountered. exiting function call.");
+				break;
+			}
+			//System.out.println("just testing" + tempNode.getData().substring(0, 1));
 			parseString(tempNode.getData());
 			tempNode = tempNode.getNext();
 		}
@@ -106,7 +112,7 @@ public class LinkedList {
 		}
 		if(line.substring(0, 1).equals("x"))
 		{
-			System.out.println(line + "x");
+			parseX(line);
 		}
 	}
 	
@@ -132,5 +138,22 @@ public class LinkedList {
 //			}
 //		}
 		return "";
+	}
+	
+	public void parseX(String line)
+	{
+		String functionName = line.substring(2, line.length());
+		Node currentNode = head;
+		System.out.println("Function name in parseX is " + functionName);
+		while(currentNode.getNext() != null) { //getting hung up on q after f alpha
+			if (currentNode.getData().substring(2, currentNode.getData().length()).equals(functionName)) //look for node that has function named the same as we are looking for
+			{
+				runFunction(currentNode);
+				break;
+			}
+			currentNode = currentNode.getNext();
+			System.out.println(currentNode.getData());
+		}
+
 	}
 }

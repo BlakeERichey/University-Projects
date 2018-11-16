@@ -17,12 +17,13 @@ public class Assignment4 {
 				 procList.addItem(file.nextLine());
 			}
 			
-			procList.runMain();
+			procList.runFunction(procList.findMain());
 			
 		} catch (FileNotFoundException e) 
 		{
 			System.out.println("File does not exist or cannot find file.");
 		}
+		
 		
 		
 
