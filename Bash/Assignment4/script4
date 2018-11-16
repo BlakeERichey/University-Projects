@@ -1,0 +1,31 @@
+#!/bin/bash
+#Write a script (called ) that takes a file name of a text file as a command-line
+#parameter followed by one or more names.
+#o Each line of the text file contains a single name and a single numerical value
+#separated by a space (e.g., ). However, the file may contain multiple
+#entries within the file where the same name is associated with various values.
+#o Your script should iterate through all of the names provided as command-line
+#parameters, calculate the total of the numerical values associated with each name
+#and display the results to a precision of two decimal places.
+#o If a name is provided that is not contained within the file, then the total displayed
+#should be 0.00.
+#o Display an appropriate error message if the file does not exist.
+
+for val in "$@"
+do
+	if [ $val = $1 ]
+	then
+		>>/dev/null
+	else
+		for line in $(grep $val $1)
+		do
+			if [ $line = $val ]
+			then
+				>>/dev/null
+			else
+				echo $line
+			fi
+		done
+	fi
+
+done
