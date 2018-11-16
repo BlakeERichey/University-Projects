@@ -18,6 +18,7 @@ public class Assignment4 {
 			}
 			
 			procList.runFunction(procList.findMain());
+			procList.parseC("3+7/5*2");
 			
 		} catch (FileNotFoundException e) 
 		{

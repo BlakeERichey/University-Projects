@@ -31,7 +31,12 @@ public class LinkedList {
 	public String removeNode(Node item)
 	{
 		String tempString = item.getData();
-		if (item == tail)
+		if(head == tail)
+		{
+			head=null;
+			tail=null;
+		}
+		else if (item == tail)
 		{
 			//find node prior to tail
 			Node currentNode = head;
@@ -44,6 +49,7 @@ public class LinkedList {
 		}
 		else
 		{
+			System.out.println("Tempstring is" + tempString);
 			//find node prior to item
 			Node currentNode = head;
 			while(currentNode.getNext() != item) 
@@ -52,6 +58,7 @@ public class LinkedList {
 			}
 			currentNode.setNext(item.getNext());
 		}
+
 		return tempString;
 	}
 
@@ -123,22 +130,29 @@ public class LinkedList {
 	
 	public void parseC(String line)
 	{
-		stackInfixToPostfix(line);
+		stackInfixToPostfix tempStack = new stackInfixToPostfix(line);
+		tempStack.convertToPostFix();
 	}
 	
-	public String stackInfixToPostfix(String line) 
-	{
-//		String[] tempString = new String[line.length()];
+//	public String stackInfixToPostfix(String line) 
+//	{
+//		String tempString = "";
 //		String[] tempStack = new String[line.length()];
+//		int stackTail = 0;
 //		for(int index = 0; index < line.length(); index++)
 //		{
 //			if (!(Character.isDigit(line.charAt(index))))
 //			{
-//				tempStack
+//				tempStack[stackTail++] = line.substring(index, index+1);
+//			}
+//			else
+//			{
+//				tempString += line.substring(index, index+1);
 //			}
 //		}
-		return "";
-	}
+//		System.out.println("tempString is " + tempString);
+//		return "";
+//	}
 	
 	public void parseX(String line)
 	{
