@@ -62,6 +62,7 @@ public class LinkedList {
 		return tempString;
 	}
 
+	
 	public String getString() {
 		Node currentNode = head;
 		String tempString = "";
@@ -73,6 +74,7 @@ public class LinkedList {
 		return tempString;
 	}
 	
+	//finds f main in file being interpreted
 	public Node findMain()  //make sure list isnt empty
 	{
 		Node currentNode = head;
@@ -87,6 +89,7 @@ public class LinkedList {
 		return null;
 	}
 	
+	//runs a function, f,. main automatically calls the "f main" of the interpreted language
 	public void runFunction(Node functionNode) 
 	{
 		Node tempNode = functionNode.getNext();
@@ -103,19 +106,16 @@ public class LinkedList {
 		}
 	}
 	
+	//determines which call is being made
 	public void parseString(String line)
 	{
-		if(line.substring(0, 1).equals("f"))
-		{
-			System.out.println(line + "f");
-		}
 		if(line.substring(0, 1).equals("p"))
 		{
 			parseP(line);
 		}
 		if(line.substring(0, 1).equals("c"))
 		{
-			System.out.println(line + "c");
+			System.out.println(parseC(line.substring(2, line.length())));
 		}
 		if(line.substring(0, 1).equals("x"))
 		{
@@ -123,73 +123,19 @@ public class LinkedList {
 		}
 	}
 	
+	//processes p calls
 	public void parseP(String line)
 	{
 		System.out.println(line.substring(2, line.length()));
 	}
 	
-	public String parseC(String line)
+	//processes c calls
+	public double parseC(String line)
 	{
-		System.out.println("line is " + line);
-		stackInfixToPostfix tempStack = new stackInfixToPostfix(line);
-		return convertToPostFix(tempStack);
+		return evaluatePostfix(infixToPostfix(line));
 	}
 	
-	public static String convertToPostFix(stackInfixToPostfix line)
-	{
-		for(int index = 0; index < line.input.length(); index++)
-		{
-			if (!(Character.isDigit(line.input.charAt(index))))
-			{
-				if (line.input.charAt(index) == '(')
-				{
-					line.push("(");
-					System.out.println(line.stack[0]);
-
-				}
-				else if (line.input.charAt(index) == ')')
-				{
-					while (!line.isEmpty() && !line.stack[line.top].equals("("))
-					{
-						for(int x =0; x<line.stack.length; x++)
-						{
-							System.out.println("stack element is" );
-						}
-						System.out.println(line.stack[line.top].equals("("));
-						line.output+=line.pop();
-					}
-				}
-			}
-			else
-			{
-				line.output+=line.input.substring(index, index+1);
-			}
-		}
-		System.out.println(line.stack[0]);
-		return line.output;
-	}
-	
-	
-//	public String stackInfixToPostfix(String line) 
-//	{
-//		String tempString = "";
-//		String[] tempStack = new String[line.length()];
-//		int stackTail = 0;
-//		for(int index = 0; index < line.length(); index++)
-//		{
-//			if (!(Character.isDigit(line.charAt(index))))
-//			{
-//				tempStack[stackTail++] = line.substring(index, index+1);
-//			}
-//			else
-//			{
-//				tempString += line.substring(index, index+1);
-//			}
-//		}
-//		System.out.println("tempString is " + tempString);
-//		return "";
-//	}
-	
+	//processes X calls
 	public void parseX(String line)
 	{
 		String functionName = line.substring(2, line.length());
@@ -209,4 +155,109 @@ public class LinkedList {
 		}
 
 	}
+	
+    //prioritized operators
+    static int Priority(char ch) 
+    { 
+        switch (ch) 
+        { 
+        case '+': 
+        case '-': 
+            return 1; 
+       
+        case '/': 
+        case '*': 
+            return 2; 
+       
+        case '^': 
+            return 3; 
+        } 
+        return -1; 
+    } 
+    
+    //conversion method similar to example found online, though using my methods rather than an ArrayList.
+    //https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
+    //converts infix expression to postfix expression
+    public static String infixToPostfix(String line) 
+    { 
+        String result = new String(""); 
+          
+        // initialize empty stack 
+        StackAdt stack = new StackAdt(); 
+          
+        for (int i = 0; i<line.length(); ++i) 
+        { 
+            char c = line.charAt(i); 
+              
+             // If character is an operand, add it to output. 
+            if (Character.isLetterOrDigit(c)) 
+                result += c; 
+               
+            //If character is '(', push it to the stack. 
+            else if (c == '(') 
+                stack.push(c); 
+              
+             
+            else if (c == ')') 
+            { 
+            	//pop off stack until ( is encountered
+                while (!stack.isEmpty() && stack.peek() != '(') 
+                    result += stack.pop(); 
+                  
+                if (!stack.isEmpty() && stack.peek() != '(') 
+                    return "Invalid Expression"; // invalid expression                 
+                else
+                    stack.pop(); 
+            } 
+            else // an operator is encountered 
+            { 
+                while (!stack.isEmpty() && Priority(c) <= Priority(stack.peek())) 
+                    result += stack.pop(); 
+                stack.push(c); 
+            } 
+       
+        } 
+       
+        // pop all the operators from the stack 
+        while (!stack.isEmpty()) 
+            result += stack.pop(); 
+       
+        return result; 
+    } 
+
+    //evaluates the total of a postfix expression
+    public double evaluatePostfix(String exp)
+    {
+    	StringStack tempStack = new StringStack();
+    	for(int i =0; i<exp.length(); i++)
+    	{
+    		//System.out.println("hello" + exp.charAt(i));
+    		
+    		if ((Character.isDigit(exp.charAt(i))))
+    		{
+    			tempStack.push(exp.substring(i, i+1));
+    		}
+    		else
+    		{
+    			double val1 = Double.parseDouble(tempStack.pop());
+    			double val2 =  Double.parseDouble(tempStack.pop());
+    			if (exp.charAt(i) == '*')
+    			{
+    				tempStack.push(val2*val1 + "");
+    			} else if ((exp.charAt(i) == '/'))
+    			{
+    				tempStack.push(val2/val1+"");
+    			} else if ((exp.charAt(i) == '+'))
+    			{
+    				//System.out.println(val1 + " " + val2 + " " + tempStack.peek());
+    				tempStack.push(val2+val1 + "");
+    			} else if ((exp.charAt(i) == '-'))
+    			{
+    				tempStack.push(val2-val1+"");
+    			}
+    		}
+    	}
+    	return Double.parseDouble(tempStack.pop());
+    }
+
 }
