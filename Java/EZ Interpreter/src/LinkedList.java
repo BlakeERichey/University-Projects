@@ -128,11 +128,47 @@ public class LinkedList {
 		System.out.println(line.substring(2, line.length()));
 	}
 	
-	public void parseC(String line)
+	public String parseC(String line)
 	{
+		System.out.println("line is " + line);
 		stackInfixToPostfix tempStack = new stackInfixToPostfix(line);
-		tempStack.convertToPostFix();
+		return convertToPostFix(tempStack);
 	}
+	
+	public static String convertToPostFix(stackInfixToPostfix line)
+	{
+		for(int index = 0; index < line.input.length(); index++)
+		{
+			if (!(Character.isDigit(line.input.charAt(index))))
+			{
+				if (line.input.charAt(index) == '(')
+				{
+					line.push("(");
+					System.out.println(line.stack[0]);
+
+				}
+				else if (line.input.charAt(index) == ')')
+				{
+					while (!line.isEmpty() && !line.stack[line.top].equals("("))
+					{
+						for(int x =0; x<line.stack.length; x++)
+						{
+							System.out.println("stack element is" );
+						}
+						System.out.println(line.stack[line.top].equals("("));
+						line.output+=line.pop();
+					}
+				}
+			}
+			else
+			{
+				line.output+=line.input.substring(index, index+1);
+			}
+		}
+		System.out.println(line.stack[0]);
+		return line.output;
+	}
+	
 	
 //	public String stackInfixToPostfix(String line) 
 //	{
