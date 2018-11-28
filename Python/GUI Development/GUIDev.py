@@ -1,7 +1,7 @@
 #Demonstrate some basic GUI Development using PyQt5
 
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, qApp, QMenu
+from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, qApp, QMenu, QTextEdit
 from PyQt5.QtGui import QIcon
 
 class BasicWindow(QMainWindow):
@@ -10,6 +10,9 @@ class BasicWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        textEdit = QTextEdit()
+        self.setCentralWidget(textEdit)
+
         menubar = self.menuBar()
         
         exitAct = QAction(QIcon('exit.png'), '&Exit', self) #variable encapsulating the exit command
@@ -17,9 +20,11 @@ class BasicWindow(QMainWindow):
         exitAct.setStatusTip("Exit application.")
         exitAct.triggered.connect(self.quit)
 
-        self.statusBar()#.showMessage("Ready")
+        self.statusbar = self.statusBar()#.showMessage("Ready")
+        self.toolbar = self.addToolBar("Exit")
+        self.toolbar.addAction(exitAct)
         self.setGeometry(300, 300, 300, 200)
-        self.setWindowTitle("Simple Menu with Submenu")
+        self.setWindowTitle("With Context Menu")
         self.show()
 
         impAct = QAction("Import mail", self)
@@ -33,6 +38,31 @@ class BasicWindow(QMainWindow):
         fileMenu.addMenu(impMenu)
         fileMenu.addAction(exitAct)
 
+        viewMenu = menubar.addMenu("&View")
+        viewStatsAct = QAction("View statusbar", self, checkable=True)
+        viewStatsAct.setStatusTip("View Statusbar")
+        viewStatsAct.setChecked(True)
+        viewStatsAct.triggered.connect(self.toggleMenu)
+
+        viewMenu.addAction(viewStatsAct)
+
+    def toggleMenu(self, state):
+        if state:
+            self.statusbar.show()
+        else:
+            self.statusbar.hide()
+
+    def contextMenuEvent(self, event):
+        cmenu = QMenu(self)
+
+        newAct = cmenu.addAction("New")
+        opnAct = cmenu.addAction("Open")
+        quitAct = cmenu.addAction("Quit")
+        action = cmenu.exec_(self.mapToGlobal(event.pos()))
+
+        if action == quitAct:
+            self.quit()
+            
     def quit(self):
         sys.exit()
         
