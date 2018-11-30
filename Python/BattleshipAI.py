@@ -60,18 +60,18 @@ def findOrientation(guess):
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
-    if (guess in enemyShipsCoordinates and len(hitCoordinates) == 1):
-        findOrientation(guess)
-        print("Orientation is " + orientation)
+##    if (guess in enemyShipsCoordinates and len(hitCoordinates) == 1):
+##        findOrientation(guess)
+##        print("Orientation is " + orientation)
     if guess in enemyShipsCoordinates:
-        if (len(hitCoordinates) == 0):
-            smartToGuess.append((guess[0] - 1, guess[1])) #adds cooridinate to left of initial hit to list
-            smartToGuess.append((guess[0] + 1, guess[1])) #adds cooridinate to right of initial hit to list
-            smartToGuess.append((guess[0], guess[1] - 1)) #adds cooridinate up of initial hit to list
-            smartToGuess.append((guess[0], guess[1] + 1)) #adds cooridinate down of initial hit to list
-            for x in smartToGuess:
-                if x not in availableGuesses:
-                    smartToGuess.remove(x)
+        tempArray = []
+        tempArray.append((guess[0] - 1, guess[1])) #adds cooridinate to left of initial hit to list
+        tempArray.append((guess[0] + 1, guess[1])) #adds cooridinate to right of initial hit to list
+        tempArray.append((guess[0], guess[1] - 1)) #adds cooridinate up of initial hit to list
+        tempArray.append((guess[0], guess[1] + 1)) #adds cooridinate down of initial hit to list
+        for x in tempArray:
+            if x in availableGuesses:
+                smartToGuess.append(x)
         hitCoordinates.append(guess)
         print("Hit!")
         #return True
@@ -81,7 +81,7 @@ def helper_didhit(guess):
 
 #Logic controller function. Will decide what kind of guess to perform
 def helper_attack():
-    if not(len(hitCoordinates) == 0):
+    if not(len(smartToGuess) == 0):
         return helper_afterhitGuess()
     else:
         return helper_randomGuess()
