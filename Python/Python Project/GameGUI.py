@@ -15,7 +15,7 @@ def run_game():
     display_height = 700
 
     Battlefield = pygame.image.load('./resources/Battlefield.png')
-
+    
     ##NUMPAD COMPONENT
     numPad1 = pygame.image.load('./resources/numPad1.png')
     numPad2 = pygame.image.load('./resources/numPad2.png')
@@ -43,7 +43,7 @@ def run_game():
 
 
     gameDisplay = pygame.display.set_mode((display_width, display_height))
-    pygame.display.set_caption('My Cool Game!')
+    pygame.display.set_caption('Uber Fantastic Mega Amazing Ultra Devastating Battleship Experience')
     clock = pygame.time.Clock()
     gameDisplay.fill(background)
 
