@@ -16,15 +16,10 @@ playerBattlefield = sorted(list(set(coordinates)))
 #place twice and where has yet to be shot
 alreadyGuessed = []
 availableGuesses = playerBattlefield
-flagHit = 0
-flagSunk = 0
 
 #for use with afterHitGuess() to make more intelligent decisions
-hitCoordinates = []
 smartToGuess = []
 smartGuessed = []
-orientation = ""
-flagSunk = 0
 
 #Guesses randomly a location on the board that has not been chosen yet.
 #then shortens the list of remaining available guesses and
@@ -42,9 +37,6 @@ def helper_randomGuess():
 def helper_afterhitGuess():
     guess = None #give guess function scope
     guess = random.choice(smartToGuess)
-##    if (orientation == "Horizontal"):
-##        if guess[0] != hitCoordinates[len(hitCoordinates)-1][0]:
-##            print "guess aborted... trying again..."  
     print("testing... guess is" + str(guess))
     smartToGuess.remove(guess)
     smartGuessed.append(guess)
@@ -53,33 +45,24 @@ def helper_afterhitGuess():
     helper_didhit(guess)
     return guess
 
-#interprets hitCoordinates to find orientation and sets the global orientation
-def findOrientation(guess):
-    global orientation
-    if guess[0] == hitCoordinates[0][0]:
-        orientation = "VERTICAL" 
-    elif guess[1] == hitCoordinates[0][1]:
-        orientation = "HORIZONTAL"
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
-    if (guess in playerShipsCoordinates and len(hitCoordinates) == 1):
-        findOrientation(guess)
     if guess in playerShipsCoordinates:
         tempArray = []
-        tempArray.append((guess[0] - 1, guess[1])) #adds cooridinate to left of initial hit to list
-        tempArray.append((guess[0] + 1, guess[1])) #adds cooridinate to right of initial hit to list
-        tempArray.append((guess[0], guess[1] - 1)) #adds cooridinate up of initial hit to list
-        tempArray.append((guess[0], guess[1] + 1)) #adds cooridinate down of initial hit to list
+        tempArray.append((chr(ord(guess[0]) - 1), guess[1])) #adds cooridinate to down of initial hit to list
+        tempArray.append((chr(ord(guess[0]) + 1), guess[1])) #adds cooridinate to up of initial hit to list
+        tempArray.append((guess[0], guess[1] - 1)) #adds cooridinate left of initial hit to list
+        tempArray.append((guess[0], guess[1] + 1)) #adds cooridinate right of initial hit to list
         for x in tempArray:
             if x in availableGuesses:
                 smartToGuess.append(x)
         hitCoordinates.append(guess)
-        print("Hit!")
-        #return True
+        #print("Hit!")
+        return True
     else:
-        print("Miss")
-        #return False
+        #print("Miss")
+        return False
 
 #Logic controller function. Will decide what kind of guess to perform
 def ai_turn():
@@ -88,4 +71,5 @@ def ai_turn():
     else:
         return helper_randomGuess()
     
-    print('my guess is ' + str(ai_turn()))
+
+print('my guess is ' + str(ai_turn()))

@@ -1,6 +1,9 @@
 # import necessary classes
 import random
 
+flagUserTurn = 0;
+flagAITurn = 0;
+
 # establish all possible points
 battlefield = [('a', 1), ('a', 2), ('a', 3), ('a', 4), ('a', 5), ('a', 6), ('a', 7), ('a', 8), ('a', 9), ('a', 10), ('b', 1), ('b', 2), ('b', 3), ('b', 4), ('b', 5), ('b', 6), ('b', 7), ('b', 8), ('b', 9), ('b', 10), ('c', 1), ('c', 2), ('c', 3), ('c', 4), ('c', 5), ('c', 6), ('c', 7), ('c', 8), ('c', 9), ('c', 10), ('d', 1), ('d', 2), ('d', 3), ('d', 4), ('d', 5), ('d', 6), ('d', 7), ('d', 8), ('d', 9), ('d', 10), ('e', 1), ('e', 2), ('e', 3), ('e', 4), ('e', 5), ('e', 6), ('e', 7), ('e', 8), ('e', 9), ('e', 10), ('f', 1), ('f', 2), ('f', 3), ('f', 4), ('f', 5), ('f', 6), ('f', 7), ('f', 8), ('f', 9), ('f', 10), ('g', 1), ('g', 2), ('g', 3), ('g', 4), ('g', 5), ('g', 6), ('g', 7), ('g', 8), ('g', 9), ('g', 10), ('h', 1), ('h', 2), ('h', 3), ('h', 4), ('h', 5), ('h', 6), ('h', 7), ('h', 8), ('h', 9), ('h', 10), ('i', 1), ('i', 2), ('i', 3), ('i', 4), ('i', 5), ('i', 6), ('i', 7), ('i', 8), ('i', 9), ('i', 10), ('j', 1), ('j', 2), ('j', 3), ('j', 4), ('j', 5), ('j', 6), ('j', 7), ('j', 8), ('j', 9), ('j', 10)]
 
@@ -339,14 +342,146 @@ allPossibleUserPoints.append(userCruiser)
 allPossibleUserPoints.append(userSubmarine)
 allPossibleUserPoints.append(userDestroyer)
 #for testing purposes
-while allPossibleEnemyPoints != []:
-  #this is the line of code you would input to call users turn
-  enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
-  # updating allPossibleEnemyPoints
-  allPossibleEnemyPoints = enemyCarrier[:]
-  allPossibleEnemyPoints.append(enemyBattleship)
-  allPossibleEnemyPoints.append(enemyCruiser)
-  allPossibleEnemyPoints.append(enemySubmarine)
-  allPossibleEnemyPoints.append(enemyDestroyer)
-  # for quick testing purposes
-  print(allPossibleEnemyPoints)
+##while allPossibleEnemyPoints != []:
+##  #this is the line of code you would input to call users turn
+##  enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
+##  # updating allPossibleEnemyPoints
+##  allPossibleEnemyPoints = enemyCarrier[:]
+##  allPossibleEnemyPoints.append(enemyBattleship)
+##  allPossibleEnemyPoints.append(enemyCruiser)
+##  allPossibleEnemyPoints.append(enemySubmarine)
+##  allPossibleEnemyPoints.append(enemyDestroyer)
+##  # for quick testing purposes
+##  print(allPossibleEnemyPoints)
+
+
+
+##AI EXECUTION
+playerShipsCoordinates = []
+for x in enemyCarrier:
+    playerShipsCoordinates.append(x)
+for x in enemyBattleship:
+    playerShipsCoordinates.append(x)
+for x in enemyCruiser:
+    playerShipsCoordinates.append(x)
+for x in enemySubmarine:
+    playerShipsCoordinates.append(x)
+for x in enemyDestroyer:
+    playerShipsCoordinates.append(x)
+
+#creates coordinates system and stores it in playerBattlefield variable
+keys = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
+values = range(1,11)
+coordinates = []
+for y in values:    #for a-j
+    for x in keys:  #and 1-10
+        coordinates.append((x, y))
+playerBattlefield = sorted(list(set(coordinates)))
+
+#Keeps up with already guess locations so AI cant shoot the same
+#place twice and where has yet to be shot
+alreadyGuessed = []
+hitCoordinates = []
+availableGuesses = playerBattlefield
+
+#for use with afterHitGuess() to make more intelligent decisions
+smartToGuess = []
+smartGuessed = []
+
+#Guesses randomly a location on the board that has not been chosen yet.
+#then shortens the list of remaining available guesses and
+#appends the list of already guessed guesses
+#guess is the current guess, returned after verifying the guess is valid.
+def helper_randomGuess():
+    if (len(availableGuesses) == 0):
+        return "No more guesses left"
+    guess = random.choice(availableGuesses)
+    availableGuesses.remove(guess)
+    alreadyGuessed.append(guess)
+    helper_didhit(guess)
+    return guess
+
+def helper_afterhitGuess():
+    guess = None #give guess function scope
+    guess = random.choice(smartToGuess)
+    print("testing... guess is" + str(guess))
+    smartToGuess.remove(guess)
+    smartGuessed.append(guess)
+    availableGuesses.remove(guess)
+    alreadyGuessed.append(guess)
+    helper_didhit(guess)
+    return guess
+
+
+#returns if the guess accurately guessed a ships location
+def helper_didhit(guess):
+    if guess in playerShipsCoordinates:
+        tempArray = []
+        tempArray.append((chr(ord(guess[0]) - 1), guess[1])) #adds cooridinate to down of initial hit to list
+        tempArray.append((chr(ord(guess[0]) + 1), guess[1])) #adds cooridinate to up of initial hit to list
+        tempArray.append((guess[0], guess[1] - 1)) #adds cooridinate left of initial hit to list
+        tempArray.append((guess[0], guess[1] + 1)) #adds cooridinate right of initial hit to list
+        for x in tempArray:
+            if x in availableGuesses:
+                smartToGuess.append(x)
+        hitCoordinates.append(guess)
+        print("The AI hit with a guess of ", guess)
+        return True
+    else:
+        print("The AI missed with a guess of ", guess)
+        return False
+
+#Logic controller function. Will decide what kind of guess to perform
+def ai_turn():
+    if not(len(smartToGuess) == 0):
+        return helper_afterhitGuess()
+    else:
+        return helper_randomGuess()
+    print('AI guessed: ' + str(ai_turn()))
+
+#print(playerShipsCoordinates)
+
+answer = random.randint(1, 100)
+compguess = random.randint(1,100)
+userguess = None
+
+##determine initial turn
+def userMiniGameGuess():
+    global userguess
+    try:
+        userguess = int(input("Please input a number between one and one hundred: "))
+        if not((userguess <= 100) and (userguess >= 0)):
+            print("Invalid selection. Number must be between 0-100")
+            userMiniGameGuess()
+    except:
+        print("Contents cannot contain any non numeric values. Please try again. E.g. 27")
+        userMiniGameGuess()
+
+userMiniGameGuess()
+compdiff = abs(answer - compguess)
+userdiff = abs(answer - userguess)
+if compdiff > userdiff:
+    flagUserTurn = 1
+    print("you win! you'll go first")
+elif userdiff > compdiff:
+    flagAITurn = 1
+    print("you lose! the computer will go first")
+else:
+    flagUserTurn = 1
+    print("it was a tie! you'll go first")
+
+#toggle turns
+def turnController():
+    global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer
+    if flagAITurn == 1:
+        ai_turn()
+        flagAITurn = 0
+        flagUserTurn = 1
+    elif (flagUserTurn == 1):
+        print(enemyCarrier)
+        enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
+        flagUserTurn = 0
+        flagAITurn = 1
+
+while True:
+    turnController()
