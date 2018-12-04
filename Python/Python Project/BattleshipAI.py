@@ -1,13 +1,13 @@
 import random
 
-playerShipsCoordinates = [(1,1), (2,1), (3,1), (4,1), (5,1), (4, 4), (4, 5), (4, 6)]
+playerShipsCoordinates = [('a',1), ('b',1), ('c',1), ('d',1), ('e',1), ('d', 4), ('d', 5), ('d', 6)]
 
 
 #creates coordinates system and stores it in playerBattlefield variable
-keys = range(1,11)
+keys = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')
 values = range(1,11)
 coordinates = []
-for y in values:    #for 1-10
+for y in values:    #for a-j
     for x in keys:  #and 1-10
         coordinates.append((x, y))
 playerBattlefield = sorted(list(set(coordinates)))
@@ -82,11 +82,10 @@ def helper_didhit(guess):
         #return False
 
 #Logic controller function. Will decide what kind of guess to perform
-def helper_attack():
+def ai_turn():
     if not(len(smartToGuess) == 0):
         return helper_afterhitGuess()
     else:
         return helper_randomGuess()
     
-
-print('my guess is ' + str(helper_attack()))
+    print('my guess is ' + str(ai_turn()))
