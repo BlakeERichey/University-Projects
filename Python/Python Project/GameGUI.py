@@ -51,6 +51,7 @@ def run_game():
     pygame.display.update()
 
     while True:
+        turnController()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -61,9 +62,19 @@ def run_game():
                 #get position of mouse and save it ss mx and my
                 mx, my = pygame.mouse.get_pos()
 
+
+                #button a pressed
+                if (len(target) == 0:
+                    if ((mx < 1100 and mx > 1000) and (my < 150 and my > 100)):
+                        coordinate += "a"
                 #button 1 is pressed
-                if ((mx > 1100) and (my < 150 and my > 100)):
-                    print("1")
+                if (len(target) == 1):    
+                    if ((mx > 1100) and (my < 150 and my > 100)):
+                        coordinate+= "1"
+                if (len(target) == "2")
+                    enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
+
+                
                 
 
         gameDisplay.blit(backgroundImage, (0, 0))
