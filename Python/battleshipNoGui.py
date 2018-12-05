@@ -21,7 +21,6 @@ userCruiser = []
 userSubmarine = []
 userDestroyer = []
 userLocs = [] # to be altered later
-coordinate = ""
 
 # setting up each ship location
 def setEnemyShipLocations():
@@ -143,15 +142,6 @@ def enemyChecker(setLocations, tester, length):
             tester = enemyChecker(setLocations, tester, length)
     return tester
 
-def checkForWinner():
-    global userLocs, enemyLocs
-    if userLocs == []:
-        print("Game Over! You Lose!")
-        return True
-    elif enemyLocs == []:
-        print("Game Over! You Win!")
-        return True
-
 # setting up each ship location
 def setUserShipLocations():
     # placing the carrier within boundaries
@@ -197,13 +187,11 @@ def userChecker(setLocations, tester, length):
             tester = userChecker(setLocations, tester, length)
 
 # this is the users turn, triggered by a flag
-def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
+def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc):
     # resets replacement variable - needed because tuples
     replacement = []
     # takes in the user's guess
-    coordinate = list(coordinate)
-    coordinate[1] = int(coordinate[1])
-    coordinate = tuple(coordinate)
+    coordinate = helper_userGuess()
     print("Firing...")
     # determines if the guess is where an enemy has placed a ship
     hitOrMiss = helper_hitOrMiss(allPossibleEnemyPoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate)
@@ -272,12 +260,10 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
       # if the user misses, no changes are made
       print("Miss! Try Again")
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
-
-      
+        
 # takes in the users input
 def helper_userGuess():
-    global coordinate
-    #coordinate = input("Where would you like to aim? ")
+    coordinate = input("Where would you like to aim? ")
     # checks that the imput is valid
     coordinate = helper_userGuessCheck(coordinate)
     # returns valid input as a tuple
@@ -285,7 +271,6 @@ def helper_userGuess():
         
 # checks that user input is within boundaries
 def helper_userGuessCheck(userInput):
-    global coordinate
     # turns string into list
     coordinate = list(userInput)
     # changes letter into ascii
@@ -396,16 +381,12 @@ playerBattlefield = sorted(list(set(coordinates)))
 #Keeps up with already guess locations so AI cant shoot the same
 #place twice and where has yet to be shot
 alreadyGuessed = []
+hitCoordinates = []
 availableGuesses = playerBattlefield
-flagHit = 0
-flagSunk = 0
 
 #for use with afterHitGuess() to make more intelligent decisions
-hitCoordinates = []
 smartToGuess = []
 smartGuessed = []
-orientation = ""
-flagSunk = 0
 
 #Guesses randomly a location on the board that has not been chosen yet.
 #then shortens the list of remaining available guesses and
@@ -423,9 +404,6 @@ def helper_randomGuess():
 def helper_afterhitGuess():
     guess = None #give guess function scope
     guess = random.choice(smartToGuess)
-##    if (orientation == "Horizontal"):
-##        if guess[0] != hitCoordinates[len(hitCoordinates)-1][0]:
-##            print "guess aborted... trying again..."  
     print("testing... guess is" + str(guess))
     smartToGuess.remove(guess)
     smartGuessed.append(guess)
@@ -434,18 +412,9 @@ def helper_afterhitGuess():
     helper_didhit(guess)
     return guess
 
-#interprets hitCoordinates to find orientation and sets the global orientation
-def findOrientation(guess):
-    global orientation
-    if guess[0] == hitCoordinates[0][0]:
-        orientation = "VERTICAL" 
-    elif guess[1] == hitCoordinates[0][1]:
-        orientation = "HORIZONTAL"
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
-    if (guess in playerShipsCoordinates and len(hitCoordinates) == 1):
-        findOrientation(guess)
     if guess in playerShipsCoordinates:
         tempArray = []
         tempArray.append((chr(ord(guess[0]) - 1), guess[1])) #adds cooridinate to down of initial hit to list
@@ -456,19 +425,19 @@ def helper_didhit(guess):
             if x in availableGuesses:
                 smartToGuess.append(x)
         hitCoordinates.append(guess)
-        print("Hit!")
-        #return True
+        print("The AI hit with a guess of ", guess)
+        return True
     else:
-        print("Miss")
-        #return False
+        print("The AI missed with a guess of ", guess)
+        return False
 
 #Logic controller function. Will decide what kind of guess to perform
-def helper_attack():
+def ai_turn():
     if not(len(smartToGuess) == 0):
         return helper_afterhitGuess()
     else:
         return helper_randomGuess()
-    
+    print('AI guessed: ' + str(ai_turn()))
 
 #print(playerShipsCoordinates)
 
@@ -487,324 +456,31 @@ def userMiniGameGuess():
     except:
         print("Contents cannot contain any non numeric values. Please try again. E.g. 27")
         userMiniGameGuess()
-    compdiff = abs(answer - compguess)
-    userdiff = abs(answer - userguess)
-    if compdiff > userdiff:
-        flagUserTurn = 1
-        print("you win! you'll go first")
-    elif userdiff > compdiff:
-        flagAITurn = 1
-        print("you lose! the computer will go first")
-    else:
-        flagUserTurn = 1
-        print("it was a tie! you'll go first")
+
+userMiniGameGuess()
+compdiff = abs(answer - compguess)
+userdiff = abs(answer - userguess)
+if compdiff > userdiff:
+    flagUserTurn = 1
+    print("you win! you'll go first")
+elif userdiff > compdiff:
+    flagAITurn = 1
+    print("you lose! the computer will go first")
+else:
+    flagUserTurn = 1
+    print("it was a tie! you'll go first")
 
 #toggle turns
 def turnController():
     global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer
     if flagAITurn == 1:
-        helper_attack()
+        ai_turn()
         flagAITurn = 0
         flagUserTurn = 1
     elif (flagUserTurn == 1):
-        print(enemyCarrier)
+        enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
         flagUserTurn = 0
         flagAITurn = 1
 
-##GUI Main Game
-import pygame, time
-
-def run_game():
-    pygame.init()
-
-    black = (0, 0, 0)
-    white = (255, 255, 255)
-    red = (255, 0, 0)
-    green = (0, 255, 0)
-    blue = (0, 0, 255)
-    background = (230, 230, 230)
-    backgroundImage=pygame.image.load('./resources/background.jpg')
-    backgroundTitle=pygame.image.load('./resources/TitleScreen.jpg')
-    howTo1=pygame.image.load('./resources/HowTo1.png')
-    howTo2=pygame.image.load('./resources/HowTo2.png')
-    howTo3=pygame.image.load('./resources/HowTo3.png')
-    cheatScreen=pygame.image.load('./resources/CheatsScreen.jpg')
-    backgroundHighScores=pygame.image.load('./resources/ScoresScreen.jpg')
-    
-    display_width = 1200
-    display_height = 700
-    Battlefield = pygame.image.load('./resources/Battlefield.png')
-
-    numPad1 = pygame.image.load('./resources/numPad1.png')
-    numPad2 = pygame.image.load('./resources/numPad2.png')
-    numPad3 = pygame.image.load('./resources/numPad3.png')
-    numPad4 = pygame.image.load('./resources/numPad4.png')
-    numPad5 = pygame.image.load('./resources/numPad5.png')
-    numPad6 = pygame.image.load('./resources/numPad6.png')
-    numPad7 = pygame.image.load('./resources/numPad7.png')
-    numPad8 = pygame.image.load('./resources/numPad8.png')
-    numPad9 = pygame.image.load('./resources/numPad9.png')
-    numPad10 = pygame.image.load('./resources/numPad10.png')
-    numPadA = pygame.image.load('./resources/numPadA.png')
-    numPadB = pygame.image.load('./resources/numPadB.png')
-    numPadC = pygame.image.load('./resources/numPadC.png')
-    numPadD = pygame.image.load('./resources/numPadD.png')
-    numPadE = pygame.image.load('./resources/numPadE.png')
-    numPadF = pygame.image.load('./resources/numPadF.png')
-    numPadG = pygame.image.load('./resources/numPadG.png')
-    numPadH = pygame.image.load('./resources/numPadH.png')
-    numPadI = pygame.image.load('./resources/numPadI.png')
-    numPadJ = pygame.image.load('./resources/numPadJ.png')
-    numPadFire = pygame.image.load('./resources/numPadFire.png')
-
-
-    coordinate = ""
-
-
-    gameDisplay = pygame.display.set_mode((display_width, display_height))
-    pygame.display.set_caption('My Cool Game!')
-    clock = pygame.time.Clock()
-    gameDisplay.fill(background)
-
-    #gameDisplay.blit(shipImg, (400, 400))
-    pygame.display.update()
-
-    Title = True
-    mainGame = False
-    Scores = False
-    HowTo1 = False
-    HowTo2 = False
-    HowTo3 = False
-    CheatMenu = False
-
-    while True:
-        while Title:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-
-                #Monitor when mouse is pressed
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    #get position of mouse and save it ss mx and my
-                    mx, my = pygame.mouse.get_pos()
-
-                    #play
-                    if ((mx < 200  and mx > 70) and (my < 400 and 335 < my)):
-                        #userMiniGameGuess()
-                        Title = False
-                        mainGame=True
-
-                    #How to play
-                    if ((mx < 430  and mx > 65) and (my < 465 and my > 410)):
-                        Title=False
-                        HowTo1=True
-                        print("How to play")
-
-                    if ((mx < 400  and mx > 65) and (my < 530 and my > 475)):
-                        Title=False
-                        Scores=True
-
-                    if ((mx < 250  and mx > 65) and (my < 610 and my > 570)):
-                        Title=False
-                        CheatMenu=True
-                        
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(backgroundTitle, (0, 0))
-                time.sleep(.03)
-                pygame.display.update()
-
-        while Scores:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(backgroundHighScores, (0, 0))
-                time.sleep(.03)
-                pygame.display.update()
-                
-        while HowTo1:
-         print("I made it here")
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()       
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(howTo1, (0, 0))
-                pygame.display.update()
-                time.sleep(5)
-                HowTo1=False
-                HowTo2=True
-                
-        while HowTo2:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()       
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(howTo2, (0, 0))
-                pygame.display.update()
-                time.sleep(5)
-                HowTo2=False
-                HowTo3=True
-
-        while HowTo3:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()       
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(howTo3, (0, 0))
-                pygame.display.update()
-                time.sleep(5)
-                HowTo3=False
-                Title=True
-                
-        while CheatMenu:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(cheatScreen, (0, 0))
-                time.sleep(.03)
-                pygame.display.update()
-
-        if mainGame==True:
-            userMiniGameGuess()
-        while mainGame:
-    ##        turnController()
-    ##        if flagUserTurn == 1 and len(coordinate)==2:
-    ##            enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, coordinate)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-
-                #Monitor when mouse is pressed
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    #get position of mouse and save it ss mx and my
-                    mx, my = pygame.mouse.get_pos()
-
-                    if len(coordinate) == 0:
-                        #button a is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 150 and my > 100)):
-                            coordinate += "a"
-                        #button b is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 200 and my > 150)):
-                            coordinate += "b"                    
-                        #button c is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 250 and my > 200)):
-                            coordinate += "c" 
-                        #button d is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 300 and my > 250)):
-                            coordinate += "d"
-                        #button e is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 350 and my > 300)):
-                            coordinate += "e"
-                        #button f is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 400 and my > 350)):
-                            coordinate += "f"
-                        #button g is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 450 and my > 400)):
-                            coordinate += "g"
-                        #button h is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 500 and my > 450)):
-                            coordinate += "h"
-                        #button i is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 550 and my > 500)):
-                            coordinate += "i"
-                        #button j is pressed
-                        if ((mx < 1090 and mx > 1000) and (my < 600 and my > 550)):
-                            coordinate += "j"
-                    
-                        
-                    elif (len(coordinate) == 1):
-                        #button 1 is pressed
-                        if ((mx > 1090) and (my < 150 and my > 100)):
-                            coordinate += "1"
-                        #button 2 is pressed
-                        if ((mx > 1090) and (my < 200 and my > 150)):
-                            coordinate += "2"
-                        #button 3 is pressed
-                        if ((mx > 1090) and (my < 250 and my > 200)):
-                            coordinate += "3"
-                        #button 4 is pressed
-                        if ((mx > 1090) and (my < 300 and my > 250)):
-                            coordinate += "4"
-                        #button 5 is pressed
-                        if ((mx > 1090) and (my < 350 and my > 300)):
-                            coordinate += "5"
-                        #button 6 is pressed
-                        if ((mx > 1090) and (my < 400 and my > 350)):
-                            coordinate += "6"
-                        #button 7 is pressed
-                        if ((mx > 1090) and (my < 450 and my > 400)):
-                            coordinate += "7"
-                        #button 8 is pressed
-                        if ((mx > 1090) and (my < 500 and my > 450)):
-                            coordinate += "8"
-                        #button 9 is pressed
-                        if ((mx > 1090) and (my < 550 and my > 500)):
-                            coordinate += "9"
-                        #button 0 is pressed
-                        if ((mx > 1090) and (my < 600 and my > 550)):
-                            coordinate += "0"
-                        print(coordinate)
-                            
-                         
-                    
-            gameDisplay.fill(background)
-
-            gameDisplay.blit(backgroundImage, (0, 0))
-
-            #player battlefield
-            gameDisplay.blit(Battlefield, (100, 200))
-
-            #ai battlefield
-            gameDisplay.blit(Battlefield, (550, 200))
-            
-            #render keypad
-            gameDisplay.blit(numPadA, (1000, 100))
-            gameDisplay.blit(numPadB, (1000, 150))
-            gameDisplay.blit(numPadC, (1000, 200))
-            gameDisplay.blit(numPadD, (1000, 250))
-            gameDisplay.blit(numPadE, (1000, 300))
-            gameDisplay.blit(numPadF, (1000, 350))
-            gameDisplay.blit(numPadG, (1000, 400))
-            gameDisplay.blit(numPadH, (1000, 450))
-            gameDisplay.blit(numPadI, (1000, 500))
-            gameDisplay.blit(numPadJ, (1000, 550))
-            gameDisplay.blit(numPad1, (1100, 100))
-            gameDisplay.blit(numPad2, (1100, 150))
-            gameDisplay.blit(numPad3, (1100, 200))
-            gameDisplay.blit(numPad4, (1100, 250))
-            gameDisplay.blit(numPad5, (1100, 300))
-            gameDisplay.blit(numPad6, (1100, 350))
-            gameDisplay.blit(numPad7, (1100, 400))
-            gameDisplay.blit(numPad8, (1100, 450))
-            gameDisplay.blit(numPad9, (1100, 500))
-            gameDisplay.blit(numPad10, (1100, 550))
-            gameDisplay.blit(numPadFire, (1000, 600))
-
-            checkForWinner()
-            
-            time.sleep(.03)
-            #print("\n", alreadyGuessed, availableGuesses)
-            pygame.display.update()
-        
-run_game()
+while True:
+    turnController()

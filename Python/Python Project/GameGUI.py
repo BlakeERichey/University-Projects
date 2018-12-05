@@ -14,9 +14,6 @@ def run_game():
     display_width = 1200
     display_height = 700
 
-    Battlefield = pygame.image.load('./resources/Battlefield.png')
-    
-    ##NUMPAD COMPONENT
     numPad1 = pygame.image.load('./resources/numPad1.png')
     numPad2 = pygame.image.load('./resources/numPad2.png')
     numPad3 = pygame.image.load('./resources/numPad3.png')
@@ -40,10 +37,11 @@ def run_game():
     numPadFire = pygame.image.load('./resources/numPadFire.png')
 
 
+    coordinate = ""
 
 
     gameDisplay = pygame.display.set_mode((display_width, display_height))
-    pygame.display.set_caption('Uber Fantastic Mega Amazing Ultra Devastating Battleship Experience')
+    pygame.display.set_caption('My Cool Game!')
     clock = pygame.time.Clock()
     gameDisplay.fill(background)
 
@@ -51,7 +49,6 @@ def run_game():
     pygame.display.update()
 
     while True:
-        turnController()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -62,29 +59,77 @@ def run_game():
                 #get position of mouse and save it ss mx and my
                 mx, my = pygame.mouse.get_pos()
 
-
-                #button a pressed
-                if (len(target) == 0:
-                    if ((mx < 1100 and mx > 1000) and (my < 150 and my > 100)):
+                if len(coordinate) == 0:
+                    #button a is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 150 and my > 100)):
                         coordinate += "a"
-                #button 1 is pressed
-                if (len(target) == 1):    
-                    if ((mx > 1100) and (my < 150 and my > 100)):
-                        coordinate+= "1"
-                if (len(target) == "2")
-                    enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
-
+                    #button b is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 200 and my > 150)):
+                        coordinate += "b"                    
+                    #button c is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 250 and my > 200)):
+                        coordinate += "c" 
+                    #button d is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 300 and my > 250)):
+                        coordinate += "d"
+                    #button e is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 350 and my > 300)):
+                        coordinate += "e"
+                    #button f is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 400 and my > 350)):
+                        coordinate += "f"
+                    #button g is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 450 and my > 400)):
+                        coordinate += "g"
+                    #button h is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 500 and my > 450)):
+                        coordinate += "h"
+                    #button i is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 550 and my > 500)):
+                        coordinate += "i"
+                    #button j is pressed
+                    if ((mx < 1090 and mx > 1000) and (my < 600 and my > 550)):
+                        coordinate += "j"
                 
+                    
+                elif (len(coordinate) == 1):
+                    #button 1 is pressed
+                    if ((mx > 1090) and (my < 150 and my > 100)):
+                        coordinate += "1"
+                    #button 2 is pressed
+                    if ((mx > 1090) and (my < 200 and my > 150)):
+                        coordinate += "2"
+                    #button 3 is pressed
+                    if ((mx > 1090) and (my < 250 and my > 200)):
+                        coordinate += "3"
+                    #button 4 is pressed
+                    if ((mx > 1090) and (my < 300 and my > 250)):
+                        coordinate += "4"
+                    #button 5 is pressed
+                    if ((mx > 1090) and (my < 350 and my > 300)):
+                        coordinate += "5"
+                    #button 6 is pressed
+                    if ((mx > 1090) and (my < 400 and my > 350)):
+                        coordinate += "6"
+                    #button 7 is pressed
+                    if ((mx > 1090) and (my < 450 and my > 400)):
+                        coordinate += "7"
+                    #button 8 is pressed
+                    if ((mx > 1090) and (my < 500 and my > 450)):
+                        coordinate += "8"
+                    #button 9 is pressed
+                    if ((mx > 1090) and (my < 550 and my > 500)):
+                        coordinate += "9"
+                    #button 0 is pressed
+                    if ((mx > 1090) and (my < 600 and my > 550)):
+                        coordinate += "0"
+                    print(coordinate)
+                        
+                     
                 
+        gameDisplay.fill(background)
 
         gameDisplay.blit(backgroundImage, (0, 0))
-
-        #player battlefield
-        gameDisplay.blit(Battlefield, (100, 200))
-
-        #ai battlefield
-        gameDisplay.blit(Battlefield, (550, 200))
-        
         #render keypad
         gameDisplay.blit(numPadA, (1000, 100))
         gameDisplay.blit(numPadB, (1000, 150))
