@@ -621,61 +621,79 @@ def run_game():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+                    
+                #Monitor when mouse is pressed
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #get position of mouse and save it ss mx and my
+                    mx, my = pygame.mouse.get_pos()
+
+                    if ((mx < 65  and mx > 45) and (my < 65 and my > 40)):
+                        Scores=False
+                        Title=True
 
                 gameDisplay.fill(background)
 
                 gameDisplay.blit(backgroundHighScores, (0, 0))
                 time.sleep(.03)
                 pygame.display.update()
+
                 
         while HowTo1:
-         print("I made it here")
-         for event in pygame.event.get():
+            for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()       
 
-                gameDisplay.fill(background)
+            gameDisplay.fill(background)
 
-                gameDisplay.blit(howTo1, (0, 0))
-                pygame.display.update()
-                time.sleep(5)
-                HowTo1=False
-                HowTo2=True
+            gameDisplay.blit(howTo1, (0, 0))
+            pygame.display.update()
+            time.sleep(5)
+            HowTo1=False
+            HowTo2=True
                 
         while HowTo2:
-         for event in pygame.event.get():
+            for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()       
 
-                gameDisplay.fill(background)
+            gameDisplay.fill(background)
 
-                gameDisplay.blit(howTo2, (0, 0))
-                pygame.display.update()
-                time.sleep(5)
-                HowTo2=False
-                HowTo3=True
+            gameDisplay.blit(howTo2, (0, 0))
+            pygame.display.update()
+            time.sleep(5)
+            HowTo2=False
+            HowTo3=True
 
         while HowTo3:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()       
+##            for event in pygame.event.get():
+##                if event.type == pygame.QUIT:
+##                    pygame.quit()
+##                    quit()       
 
-                gameDisplay.fill(background)
+            gameDisplay.fill(background)
 
-                gameDisplay.blit(howTo3, (0, 0))
-                pygame.display.update()
-                time.sleep(5)
-                HowTo3=False
-                Title=True
+            gameDisplay.blit(howTo3, (0, 0))
+            pygame.display.update()
+            time.sleep(5)
+            HowTo3=False
+            Title=True
                 
         while CheatMenu:
          for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+
+                #Monitor when mouse is pressed
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #get position of mouse and save it ss mx and my
+                    mx, my = pygame.mouse.get_pos()
+
+                    if ((mx < 65  and mx > 45) and (my < 65 and my > 40)):
+                        CheatMenu=False
+                        Title=True
 
                 gameDisplay.fill(background)
 
