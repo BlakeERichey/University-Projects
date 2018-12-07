@@ -1,0 +1,15 @@
+#!/bin/bash
+#using a temporary directory
+
+tempdir=$(mktemp -d dir.XXXXXX)
+
+cd $tempdir
+tempfile1=$(mktemp temp.XXXXXX)
+tempfile2=$(mktemp temp.XXXXXX)
+
+exec 7> $tempfile1
+exec 8> $tempfile2
+
+echo "Sending data to directory $tempdir"
+echo "Into the distance a ribbon of black" >&7
+echo "Stretched to the point og no turning back" >&8
