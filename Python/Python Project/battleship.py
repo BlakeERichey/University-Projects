@@ -144,8 +144,8 @@ def enemyChecker(setLocations, tester, length):
     return tester
 
 def checkForWinner():
-    global userLocs, enemyLocs
-    if userLocs == []:
+    global playerShipsCoordinates, enemyLocs
+    if playerShipsCoordinates == []:
         print("Game Over! You Lose!")
         return True
     elif enemyLocs == []:
@@ -439,7 +439,7 @@ def helper_afterhitGuess():
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
-    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed
+    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed, playerShipsCoordinates
     if guess in playerShipsCoordinates:
         tempArray = []
         tempArray.append((chr(ord(guess[0]) - 1), guess[1])) #adds cooridinate to down of initial hit to list
@@ -450,11 +450,11 @@ def helper_didhit(guess):
             if x in availableGuesses:
                 smartToGuess.append(x)
         hitCoordinates.append(guess)
+        playerShipsCoordinates.remove(guess)
         print("Hit!", guess)
         #return True
     else:
         print("Miss", guess)
-        print(availableGuesses)
         #return False
 
 #Logic controller function. Will decide what kind of guess to perform
@@ -523,6 +523,9 @@ def run_game():
     howTo3=pygame.image.load('./resources/HowTo3.png')
     cheatScreen=pygame.image.load('./resources/CheatsScreen.jpg')
     backgroundHighScores=pygame.image.load('./resources/ScoresScreen.jpg')
+    hitIcon=pygame.image.load('./resources/hitIcon.png')
+    missIcon=pygame.image.load('./resources/missIcon.png')
+
     
     display_width = 1200
     display_height = 700
@@ -562,6 +565,9 @@ def run_game():
     #gameDisplay.blit(shipImg, (400, 400))
     pygame.display.update()
 
+    hitList= []
+    missList = []
+
     Title = True
     mainGame = False
     Scores = False
@@ -569,6 +575,8 @@ def run_game():
     HowTo2 = False
     HowTo3 = False
     CheatMenu = False
+    GameOver=False
+    Win=False
 
     while True:
         while Title:
@@ -697,7 +705,7 @@ def run_game():
         if mainGame==True:
             userMiniGameGuess()
         while mainGame:
-            global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, userLocs, enemyLocs
+            global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, enemyLocs, playerShipsCoordinates
             turnController()
     ##        if flagUserTurn == 1 and len(coordinate)==2:
     ##            enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, coordinate)
@@ -782,20 +790,33 @@ def run_game():
                         print(gamePadCoordinate)
 
                     if flagUserTurn == 1 and len(gamePadCoordinate)==2:
-                        enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate)
-                        flagUserTurn = 0
-                        flagAITurn = 1
-                        gamePadCoordinate = ""
-                        print("Remaining player locs ", userLocs);
+                        if ((mx > 1000) and (my < 650 and my > 600)):
+                            #guess = "('" + gamePadCoordinate[0] + "', " + gamePadCoordinate[1] + ")"
+                            guess=list(gamePadCoordinate)
+                            guess[1] = int(guess[1])
+                            guess = tuple(guess)
+                            print(guess)
+    
+                            if guess in enemyLocs:
+                                hitList.append(gamePadCoordinate)
+                                print("hitList ", hitList)
+                            enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate)
+                            flagUserTurn = 0
+                            flagAITurn = 1
+                            gamePadCoordinate = ""
+                            print("Remaining ailocations locs ", enemyLocs);
         
                          
-                    
+                    for x in hitList:
+                        print("hitList " + x)
             gameDisplay.fill(background)
 
             gameDisplay.blit(backgroundImage, (0, 0))
 
             #player battlefield
             gameDisplay.blit(Battlefield, (100, 200))
+
+            gameDisplay.blit(hitIcon, (138, 238))
 
             #ai battlefield
             gameDisplay.blit(Battlefield, (550, 200))
