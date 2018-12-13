@@ -151,9 +151,12 @@ def checkForWinner():
     elif enemyLocs == []:
         print("Game Over! You Win!")
         return True
+    else:
+        return False
 
 # setting up each ship location
 def setUserShipLocations():
+    global userCarrier, userBattleship, userCruiser, userSubmarine, userDestroyer, userLocs  
     # placing the carrier within boundaries
     userCarrier = setShipLocations(battlefield, ships[0][1])
     # ammending the complete list of coordinates
@@ -195,6 +198,7 @@ def userChecker(setLocations, tester, length):
             tester = setShipLocations(battlefield, length)
             # and rechecked
             tester = userChecker(setLocations, tester, length)
+    return tester
 
 # this is the users turn, triggered by a flag
 def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
@@ -204,7 +208,7 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
     coordinate = list(coordinate)
     coordinate[1] = int(coordinate[1])
     coordinate = tuple(coordinate)
-    print("Firing...")
+    print("Firing at " + str(coordinate) + "...")
     # determines if the guess is where an enemy has placed a ship
     hitOrMiss = helper_hitOrMiss(allPossibleEnemyPoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate)
     # if hit, returns which ship hit for feedback
@@ -373,15 +377,16 @@ allPossibleUserPoints.append(userDestroyer)
 
 ##AI EXECUTION
 playerShipsCoordinates = []
-for x in enemyCarrier:
+print(userCarrier, userBattleship, userCruiser, userSubmarine, userDestroyer)
+for x in userCarrier:
     playerShipsCoordinates.append(x)
-for x in enemyBattleship:
+for x in userBattleship:
     playerShipsCoordinates.append(x)
-for x in enemyCruiser:
+for x in userCruiser:
     playerShipsCoordinates.append(x)
-for x in enemySubmarine:
+for x in userSubmarine:
     playerShipsCoordinates.append(x)
-for x in enemyDestroyer:
+for x in userDestroyer:
     playerShipsCoordinates.append(x)
 
 #creates coordinates system and stores it in playerBattlefield variable
@@ -397,21 +402,18 @@ playerBattlefield = sorted(list(set(coordinates)))
 #place twice and where has yet to be shot
 alreadyGuessed = []
 availableGuesses = playerBattlefield
-flagHit = 0
-flagSunk = 0
 
 #for use with afterHitGuess() to make more intelligent decisions
 hitCoordinates = []
 smartToGuess = []
 smartGuessed = []
-orientation = ""
-flagSunk = 0
 
 #Guesses randomly a location on the board that has not been chosen yet.
 #then shortens the list of remaining available guesses and
 #appends the list of already guessed guesses
 #guess is the current guess, returned after verifying the guess is valid.
 def helper_randomGuess():
+    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed
     if (len(availableGuesses) == 0):
         return "No more guesses left"
     guess = random.choice(availableGuesses)
@@ -421,31 +423,23 @@ def helper_randomGuess():
     return guess
 
 def helper_afterhitGuess():
+    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed
     guess = None #give guess function scope
     guess = random.choice(smartToGuess)
-##    if (orientation == "Horizontal"):
-##        if guess[0] != hitCoordinates[len(hitCoordinates)-1][0]:
-##            print "guess aborted... trying again..."  
-    print("testing... guess is" + str(guess))
     smartToGuess.remove(guess)
-    smartGuessed.append(guess)
-    availableGuesses.remove(guess)
-    alreadyGuessed.append(guess)
-    helper_didhit(guess)
-    return guess
-
-#interprets hitCoordinates to find orientation and sets the global orientation
-def findOrientation(guess):
-    global orientation
-    if guess[0] == hitCoordinates[0][0]:
-        orientation = "VERTICAL" 
-    elif guess[1] == hitCoordinates[0][1]:
-        orientation = "HORIZONTAL"
+    if guess in availableGuesses:
+        print("testing... guess is" + str(guess))
+        smartGuessed.append(guess)
+        availableGuesses.remove(guess)
+        alreadyGuessed.append(guess)
+        helper_didhit(guess)
+        return guess
+    else:
+        helper_afterhitGuess()
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
-    if (guess in playerShipsCoordinates and len(hitCoordinates) == 1):
-        findOrientation(guess)
+    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed
     if guess in playerShipsCoordinates:
         tempArray = []
         tempArray.append((chr(ord(guess[0]) - 1), guess[1])) #adds cooridinate to down of initial hit to list
@@ -456,14 +450,16 @@ def helper_didhit(guess):
             if x in availableGuesses:
                 smartToGuess.append(x)
         hitCoordinates.append(guess)
-        print("Hit!")
+        print("Hit!", guess)
         #return True
     else:
-        print("Miss")
+        print("Miss", guess)
+        print(availableGuesses)
         #return False
 
 #Logic controller function. Will decide what kind of guess to perform
 def helper_attack():
+    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed
     if not(len(smartToGuess) == 0):
         return helper_afterhitGuess()
     else:
@@ -478,7 +474,7 @@ userguess = None
 
 ##determine initial turn
 def userMiniGameGuess():
-    global userguess
+    global userguess, flagAITurn, flagUserTurn
     try:
         userguess = int(input("Please input a number between one and one hundred: "))
         if not((userguess <= 100) and (userguess >= 0)):
@@ -501,18 +497,15 @@ def userMiniGameGuess():
 
 #toggle turns
 def turnController():
-    global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer
+    global flagAITurn, flagUserTurn
     if flagAITurn == 1:
         helper_attack()
         flagAITurn = 0
         flagUserTurn = 1
-    elif (flagUserTurn == 1):
-        print(enemyCarrier)
-        flagUserTurn = 0
-        flagAITurn = 1
 
 ##GUI Main Game
 import pygame, time
+gamePadCoordinate = ""
 
 def run_game():
     pygame.init()
@@ -558,7 +551,7 @@ def run_game():
     numPadFire = pygame.image.load('./resources/numPadFire.png')
 
 
-    coordinate = ""
+    
 
 
     gameDisplay = pygame.display.set_mode((display_width, display_height))
@@ -704,9 +697,13 @@ def run_game():
         if mainGame==True:
             userMiniGameGuess()
         while mainGame:
-    ##        turnController()
+            global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, userLocs, enemyLocs
+            turnController()
     ##        if flagUserTurn == 1 and len(coordinate)==2:
     ##            enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, coordinate)
+
+            if checkForWinner():
+                exit
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -718,72 +715,79 @@ def run_game():
                     #get position of mouse and save it ss mx and my
                     mx, my = pygame.mouse.get_pos()
 
-                    if len(coordinate) == 0:
+                    if len(gamePadCoordinate) == 0:
                         #button a is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 150 and my > 100)):
-                            coordinate += "a"
+                            gamePadCoordinate += "a"
                         #button b is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 200 and my > 150)):
-                            coordinate += "b"                    
+                            gamePadCoordinate += "b"                    
                         #button c is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 250 and my > 200)):
-                            coordinate += "c" 
+                            gamePadCoordinate += "c" 
                         #button d is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 300 and my > 250)):
-                            coordinate += "d"
+                            gamePadCoordinate += "d"
                         #button e is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 350 and my > 300)):
-                            coordinate += "e"
+                            gamePadCoordinate += "e"
                         #button f is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 400 and my > 350)):
-                            coordinate += "f"
+                            gamePadCoordinate += "f"
                         #button g is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 450 and my > 400)):
-                            coordinate += "g"
+                            gamePadCoordinate += "g"
                         #button h is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 500 and my > 450)):
-                            coordinate += "h"
+                            gamePadCoordinate += "h"
                         #button i is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 550 and my > 500)):
-                            coordinate += "i"
+                            gamePadCoordinate += "i"
                         #button j is pressed
                         if ((mx < 1090 and mx > 1000) and (my < 600 and my > 550)):
-                            coordinate += "j"
+                            gamePadCoordinate += "j"
                     
                         
-                    elif (len(coordinate) == 1):
+                    elif (len(gamePadCoordinate) == 1):
                         #button 1 is pressed
                         if ((mx > 1090) and (my < 150 and my > 100)):
-                            coordinate += "1"
+                            gamePadCoordinate += "1"
                         #button 2 is pressed
                         if ((mx > 1090) and (my < 200 and my > 150)):
-                            coordinate += "2"
+                            gamePadCoordinate += "2"
                         #button 3 is pressed
                         if ((mx > 1090) and (my < 250 and my > 200)):
-                            coordinate += "3"
+                            gamePadCoordinate += "3"
                         #button 4 is pressed
                         if ((mx > 1090) and (my < 300 and my > 250)):
-                            coordinate += "4"
+                            gamePadCoordinate += "4"
                         #button 5 is pressed
                         if ((mx > 1090) and (my < 350 and my > 300)):
-                            coordinate += "5"
+                            gamePadCoordinate += "5"
                         #button 6 is pressed
                         if ((mx > 1090) and (my < 400 and my > 350)):
-                            coordinate += "6"
+                            gamePadCoordinate += "6"
                         #button 7 is pressed
                         if ((mx > 1090) and (my < 450 and my > 400)):
-                            coordinate += "7"
+                            gamePadCoordinate += "7"
                         #button 8 is pressed
                         if ((mx > 1090) and (my < 500 and my > 450)):
-                            coordinate += "8"
+                            gamePadCoordinate += "8"
                         #button 9 is pressed
                         if ((mx > 1090) and (my < 550 and my > 500)):
-                            coordinate += "9"
+                            gamePadCoordinate += "9"
                         #button 0 is pressed
                         if ((mx > 1090) and (my < 600 and my > 550)):
-                            coordinate += "0"
-                        print(coordinate)
-                            
+                            gamePadCoordinate += "0"
+                        print(gamePadCoordinate)
+
+                    if flagUserTurn == 1 and len(gamePadCoordinate)==2:
+                        enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate)
+                        flagUserTurn = 0
+                        flagAITurn = 1
+                        gamePadCoordinate = ""
+                        print("Remaining player locs ", userLocs);
+        
                          
                     
             gameDisplay.fill(background)
@@ -819,7 +823,7 @@ def run_game():
             gameDisplay.blit(numPad10, (1100, 550))
             gameDisplay.blit(numPadFire, (1000, 600))
 
-            checkForWinner()
+            
             
             time.sleep(.03)
             #print("\n", alreadyGuessed, availableGuesses)
