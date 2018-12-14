@@ -2,7 +2,7 @@
 import random
 
 flagUserTurn = 0;
-flagAITurn = 0;
+flagAITurn = 1;
 PLAYERWINS=False
 AIWINS=False
 
@@ -151,11 +151,9 @@ def enemyChecker(setLocations, tester, length):
 def checkForWinner():
     global playerShipsCoordinates, enemyLocs, AIWINS, PLAYERWINS
     if playerShipsCoordinates == []:
-        print("Game Over! You Lose!")
         AIWINS=True
         return True
     elif enemyLocs == []:
-        print("Game Over! You Win!")
         PLAYERWINS=True
         return True
     else:
@@ -207,7 +205,6 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
     replacement = []
     # takes in the user's guess
     coordinate = helper_userGuessCheck(coordinate)
-    print("Firing at " + str(coordinate) + "...")
     # determines if the guess is where an enemy has placed a ship
     hitOrMiss = helper_hitOrMiss(allPossibleEnemyPoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate)
     # if hit, returns which ship hit for feedback
@@ -444,20 +441,12 @@ def helper_attack():
 #print(playerShipsCoordinates)
 
 answer = random.randint(1, 100)
-compguess = random.randint(1,100)
+compguess = random.randint(1,10)
 userguess = None
 
 ##determine initial turn
 def userMiniGameGuess():
     global userguess, flagAITurn, flagUserTurn
-    try:
-        userguess = int(input("Please input a number between one and one hundred: "))
-        if not((userguess <= 100) and (userguess >= 0)):
-            print("Invalid selection. Number must be between 0-100")
-            userMiniGameGuess()
-    except:
-        print("Contents cannot contain any non numeric values. Please try again. E.g. 27")
-        userMiniGameGuess()
     compdiff = abs(answer - compguess)
     userdiff = abs(answer - userguess)
     if compdiff > userdiff:
@@ -502,6 +491,7 @@ def run_game():
     missIcon=pygame.image.load('./resources/missIcon.png')
     WinScreen=pygame.image.load('./resources/Win.jpg')
     GameOverScreen=pygame.image.load('./resources/GameOver.jpg')
+    minigame=pygame.image.load('./resources/minigame.jpg')
 
     
     display_width = 1200
@@ -556,15 +546,17 @@ def run_game():
 
     Title = True
     mainGame = False
-    Scores = False
+    miniGame = False
     HowTo1 = False
     HowTo2 = False
     HowTo3 = False
     CheatMenu = False
+    CheatReveal = False
     GameOver=False
     Win=False
 
     while True:
+        global flagUserTurn, flagAITurn
         while Title:
          for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -577,22 +569,22 @@ def run_game():
                     mx, my = pygame.mouse.get_pos()
 
                     #play
-                    if ((mx < 200  and mx > 70) and (my < 400 and 335 < my)):
+                    if ((mx < 155  and mx > 40) and (my < 400 and 365 < my)):
                         #userMiniGameGuess()
                         Title = False
-                        mainGame=True
+                        if flagAITurn == 1:
+                            miniGame = True
+                        else:
+                            mainGame=True
 
                     #How to play
-                    if ((mx < 430  and mx > 65) and (my < 465 and my > 410)):
+                    if ((mx < 375  and mx > 40) and (my < 495 and my > 445)):
                         Title=False
                         HowTo1=True
                         print("How to play")
 
-                    if ((mx < 400  and mx > 65) and (my < 530 and my > 475)):
-                        Title=False
-                        Scores=True
-
-                    if ((mx < 250  and mx > 65) and (my < 610 and my > 570)):
+                    #Cheats
+                    if ((mx < 200  and mx > 40) and (my < 575 and my > 535)):
                         Title=False
                         CheatMenu=True
                         
@@ -636,28 +628,6 @@ def run_game():
                 gameDisplay.blit(GameOverScreen, (0, 0))
                 time.sleep(.03)
                 pygame.display.update()
-
-        while Scores:
-         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-                    
-                #Monitor when mouse is pressed
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    #get position of mouse and save it ss mx and my
-                    mx, my = pygame.mouse.get_pos()
-
-                    if ((mx < 65  and mx > 45) and (my < 65 and my > 40)):
-                        Scores=False
-                        Title=True
-
-                gameDisplay.fill(background)
-
-                gameDisplay.blit(backgroundHighScores, (0, 0))
-                time.sleep(.03)
-                pygame.display.update()
-
                 
         while HowTo1:
             for event in pygame.event.get():
@@ -702,7 +672,7 @@ def run_game():
             Title=True
                 
         while CheatMenu:
-         for event in pygame.event.get():
+             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
@@ -712,9 +682,19 @@ def run_game():
                     #get position of mouse and save it ss mx and my
                     mx, my = pygame.mouse.get_pos()
 
-                    if ((mx < 65  and mx > 45) and (my < 65 and my > 40)):
+                    #return to main menu
+                    if ((mx < 108  and mx > 70) and (my < 70 and my > 52)):
                         CheatMenu=False
                         Title=True
+                        
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_f:
+                         flagAITurn = 0
+                         flagUserTurn = 1
+                         
+                    if event.key == pygame.K_r:
+                        CheatReveal = True
+                          
 
                 gameDisplay.fill(background)
 
@@ -722,10 +702,76 @@ def run_game():
                 time.sleep(.03)
                 pygame.display.update()
 
-        if mainGame==True:
-            userMiniGameGuess()
+        while miniGame:
+            global userguess
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                    
+                #Monitor when mouse is pressed
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #get position of mouse and save it ss mx and my
+                    mx, my = pygame.mouse.get_pos()
+
+                gameDisplay.fill(background)
+
+                gameDisplay.blit(minigame, (0, 0))
+                #render buttons
+                gameDisplay.blit(numPad1, (550, 100))
+                gameDisplay.blit(numPad2, (550, 150))
+                gameDisplay.blit(numPad3, (550, 200))
+                gameDisplay.blit(numPad4, (550, 250))
+                gameDisplay.blit(numPad5, (550, 300))
+                gameDisplay.blit(numPad6, (550, 350))
+                gameDisplay.blit(numPad7, (550, 400))
+                gameDisplay.blit(numPad8, (550, 450))
+                gameDisplay.blit(numPad9, (550, 500))
+                gameDisplay.blit(numPad10, (550, 550))
+
+                if userguess == None:
+                    #button 1 is pressed
+                    if ((550 < mx < 650) and (my < 150 and my > 100)):
+                        userguess = 1
+                    #button 2 is pressed
+                    if ((550 < mx < 650) and (my < 200 and my > 150)):
+                        userguess = 2
+                    #button 3 is pressed
+                    if ((550 < mx < 650) and (my < 250 and my > 200)):
+                        userguess = 3
+                    #button 4 is pressed
+                    if ((550 < mx < 650) and (my < 300 and my > 250)):
+                        userguess = 4
+                    #button 5 is pressed
+                    if ((550 < mx < 650) and (my < 350 and my > 300)):
+                        userguess = 5
+                    #button 6 is pressed
+                    if ((550 < mx < 650) and (my < 400 and my > 350)):
+                        userguess = 6
+                    #button 7 is pressed
+                    if ((550 < mx < 650) and (my < 450 and my > 400)):
+                        userguess = 7
+                    #button 8 is pressed
+                    if ((550 < mx < 650) and (my < 500 and my > 450)):
+                        userguess = 8
+                    #button 9 is pressed
+                    if ((550 < mx < 650) and (my < 550 and my > 500)):
+                        userguess = 9
+                    #button 0 is pressed
+                    if ((550 < mx < 650) and (my < 600 and my > 550)):
+                        userguess = 10
+
+                if not(userguess == None):
+                    userMiniGameGuess()
+                    miniGame = False
+                    mainGame= True
+                    
+                time.sleep(.03)
+                pygame.display.update()
+            
+
         while mainGame:
-            global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, enemyLocs, playerShipsCoordinates,  AIHitList, AIMissList
+            global enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, enemyLocs, playerShipsCoordinates,  AIHitList, AIMissList
             global userCarrier, userDestroyer, userBattleship, userSubmarine, userCruiser, AIWINS, PLAYERWINS
 
             turnController()
@@ -817,7 +863,6 @@ def run_game():
                         #button 0 is pressed
                         if ((mx > 1090) and (my < 600 and my > 550)):
                             gamePadCoordinate += "0"
-                        print(gamePadCoordinate)
 
                     if flagUserTurn == 1 and len(gamePadCoordinate)==2:
                         if ((mx > 1000) and (my < 700 and my > 600)):
@@ -827,20 +872,16 @@ def run_game():
                             if guess[1] == 0:
                                 guess[1] = 10
                             guess = tuple(guess)
-                            print(guess)
     
                             if guess in enemyLocs:
                                 hitList.append(gamePadCoordinate)
                                 enemyLocs.remove(guess)
-                                print("hitList ", hitList)
                             else:
                                 missList.append(gamePadCoordinate);
                             enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate)
                             flagUserTurn = 0
                             flagAITurn = 1
                             gamePadCoordinate = ""
-                            print("Remaining ailocations locs ", enemyLocs);\
-                            print("hitLocs ",hitList)
         
                     
                         
@@ -851,7 +892,7 @@ def run_game():
             #player battlefield
             gameDisplay.blit(Battlefield, (100, 200))
 
-            ##render ships
+            ##render Player ships
             if userCarrier[0][0] == userCarrier[1][0]: #means ship is horizontal
                 userCarrier.sort(key = lambda x: int(x[1])) #sort by horizontal
                 xcoord=32*(userCarrier[0][1] - 1)+137
@@ -950,6 +991,103 @@ def run_game():
             #ai battlefield
             gameDisplay.blit(Battlefield, (550, 200))
 
+            ##Render AI ships
+            if CheatReveal:
+                if enemyCarrier[0][0] == enemyCarrier[1][0]: #means ship is horizontal
+                    enemyCarrier.sort(key = lambda x: int(x[1])) #sort by horizontal
+                    xcoord=32*(enemyCarrier[0][1] - 1)+587
+                    ycoord=32*(ord(enemyCarrier[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(HCarSprite, pixels)
+                else:
+                    enemyCarrier.sort(key = lambda x: x[0]) #sort by vertical
+                    xcoord=32*(enemyCarrier[0][1] - 1)+587
+                    ycoord=32*(ord(enemyCarrier[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(VCarSprite, pixels)
+
+                if enemyBattleship[0][0] == enemyBattleship[1][0]:
+                    enemyBattleship.sort(key = lambda x: int(x[1])) #sort by horizontal
+                    xcoord=32*(enemyBattleship[0][1] - 1)+587
+                    ycoord=32*(ord(enemyBattleship[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(HBatSprite, pixels)
+                else:
+                    enemyBattleship.sort(key = lambda x: x[0]) #sort by vertical
+                    xcoord=32*(enemyBattleship[0][1] - 1)+587
+                    ycoord=32*(ord(enemyBattleship[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(VBatSprite, pixels)
+
+                if enemyCruiser[0][0] == enemyCruiser[1][0]:
+                    enemyCruiser.sort(key = lambda x: int(x[1])) #sort by horizontal
+                    xcoord=32*(enemyCruiser[0][1] - 1)+587
+                    ycoord=32*(ord(enemyCruiser[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(HCruSprite, pixels)
+                else:
+                    enemyCruiser.sort(key = lambda x: x[0]) #sort by vertical
+                    xcoord=32*(enemyCruiser[0][1] - 1)+587
+                    ycoord=32*(ord(enemyCruiser[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(VCruSprite, pixels)
+                    
+                if enemySubmarine[0][0] == enemySubmarine[1][0]:
+                    enemySubmarine.sort(key = lambda x: int(x[1])) #sort by horizontal
+                    xcoord=32*(enemySubmarine[0][1] - 1)+587
+                    ycoord=32*(ord(enemySubmarine[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(HSubSprite, pixels)
+                else:
+                    enemySubmarine.sort(key = lambda x: x[0]) #sort by vertical
+                    xcoord=32*(enemySubmarine[0][1] - 1)+587
+                    ycoord=32*(ord(enemySubmarine[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(VSubSprite, pixels)
+
+                if enemyDestroyer[0][0] == enemyDestroyer[1][0]:
+                    enemyDestroyer.sort(key = lambda x: int(x[1])) #sort by horizontal
+                    xcoord=32*(enemyDestroyer[0][1] - 1)+587
+                    ycoord=32*(ord(enemyDestroyer[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(HDesSprite, pixels)
+                else:
+                    enemyDestroyer.sort(key = lambda x: x[0]) #sort by vertical
+                    xcoord=32*(enemyDestroyer[0][1] - 1)+587
+                    ycoord=32*(ord(enemyDestroyer[0][0])%96 - 1)+237
+                    pixels = []
+                    pixels.append(xcoord)
+                    pixels.append(ycoord)
+                    pixels = tuple(pixels)
+                    gameDisplay.blit(VDesSprite, pixels)
+
             for miss in AIMissList:
                 num=int(miss[1])
                 if num == 0:
@@ -1009,7 +1147,6 @@ def run_game():
             
             
             time.sleep(.03)
-            #print("\n", alreadyGuessed, availableGuesses)
             pygame.display.update()
         
 run_game()
