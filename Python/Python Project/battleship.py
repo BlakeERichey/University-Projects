@@ -4,6 +4,9 @@ import random
 flagUserTurn = 0;
 flagAITurn = 0;
 
+AIHitList = []
+AIMissList = []
+
 # establish all possible points
 battlefield = [('a', 1), ('a', 2), ('a', 3), ('a', 4), ('a', 5), ('a', 6), ('a', 7), ('a', 8), ('a', 9), ('a', 10), ('b', 1), ('b', 2), ('b', 3), ('b', 4), ('b', 5), ('b', 6), ('b', 7), ('b', 8), ('b', 9), ('b', 10), ('c', 1), ('c', 2), ('c', 3), ('c', 4), ('c', 5), ('c', 6), ('c', 7), ('c', 8), ('c', 9), ('c', 10), ('d', 1), ('d', 2), ('d', 3), ('d', 4), ('d', 5), ('d', 6), ('d', 7), ('d', 8), ('d', 9), ('d', 10), ('e', 1), ('e', 2), ('e', 3), ('e', 4), ('e', 5), ('e', 6), ('e', 7), ('e', 8), ('e', 9), ('e', 10), ('f', 1), ('f', 2), ('f', 3), ('f', 4), ('f', 5), ('f', 6), ('f', 7), ('f', 8), ('f', 9), ('f', 10), ('g', 1), ('g', 2), ('g', 3), ('g', 4), ('g', 5), ('g', 6), ('g', 7), ('g', 8), ('g', 9), ('g', 10), ('h', 1), ('h', 2), ('h', 3), ('h', 4), ('h', 5), ('h', 6), ('h', 7), ('h', 8), ('h', 9), ('h', 10), ('i', 1), ('i', 2), ('i', 3), ('i', 4), ('i', 5), ('i', 6), ('i', 7), ('i', 8), ('i', 9), ('i', 10), ('j', 1), ('j', 2), ('j', 3), ('j', 4), ('j', 5), ('j', 6), ('j', 7), ('j', 8), ('j', 9), ('j', 10)]
 
@@ -439,7 +442,7 @@ def helper_afterhitGuess():
 
 #returns if the guess accurately guessed a ships location
 def helper_didhit(guess):
-    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed, playerShipsCoordinates
+    global availableGuesses, hitCoordinates, smartToGuess, smartGuessed, playerShipsCoordinates, AIHitList, AIMissList
     if guess in playerShipsCoordinates:
         tempArray = []
         tempArray.append((chr(ord(guess[0]) - 1), guess[1])) #adds cooridinate to down of initial hit to list
@@ -451,9 +454,11 @@ def helper_didhit(guess):
                 smartToGuess.append(x)
         hitCoordinates.append(guess)
         playerShipsCoordinates.remove(guess)
+        AIHitList.append(guess)
         print("Hit!", guess)
         #return True
     else:
+        AIMissList.append(guess)
         print("Miss", guess)
         #return False
 
@@ -705,11 +710,10 @@ def run_game():
         if mainGame==True:
             userMiniGameGuess()
         while mainGame:
-            global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, enemyLocs, playerShipsCoordinates
-            turnController()
-    ##        if flagUserTurn == 1 and len(coordinate)==2:
-    ##            enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, coordinate)
+            global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, enemyLocs, playerShipsCoordinates,  AIHitList, AIMissList
 
+            turnController()
+    
             if checkForWinner():
                 exit
 
@@ -722,6 +726,11 @@ def run_game():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     #get position of mouse and save it ss mx and my
                     mx, my = pygame.mouse.get_pos()
+
+##                    if ((mx < 30 and mx > 187) and (my < 77 and my > 22)):
+##                        init();
+##                        exit();
+
 
                     if len(gamePadCoordinate) == 0:
                         #button a is pressed
@@ -790,7 +799,7 @@ def run_game():
                         print(gamePadCoordinate)
 
                     if flagUserTurn == 1 and len(gamePadCoordinate)==2:
-                        if ((mx > 1000) and (my < 650 and my > 600)):
+                        if ((mx > 1000) and (my < 700 and my > 600)):
                             #guess = "('" + gamePadCoordinate[0] + "', " + gamePadCoordinate[1] + ")"
                             guess=list(gamePadCoordinate)
                             guess[1] = int(guess[1])
@@ -799,16 +808,19 @@ def run_game():
     
                             if guess in enemyLocs:
                                 hitList.append(gamePadCoordinate)
+                                enemyLocs.remove(guess)
                                 print("hitList ", hitList)
+                            else:
+                                missList.append(gamePadCoordinate);
                             enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate)
                             flagUserTurn = 0
                             flagAITurn = 1
                             gamePadCoordinate = ""
-                            print("Remaining ailocations locs ", enemyLocs);
+                            print("Remaining ailocations locs ", enemyLocs);\
+                            print("hitLocs ",hitList)
         
-                         
-                    for x in hitList:
-                        print("hitList " + x)
+                    
+                        
             gameDisplay.fill(background)
 
             gameDisplay.blit(backgroundImage, (0, 0))
@@ -816,10 +828,43 @@ def run_game():
             #player battlefield
             gameDisplay.blit(Battlefield, (100, 200))
 
-            gameDisplay.blit(hitIcon, (138, 238))
-
             #ai battlefield
             gameDisplay.blit(Battlefield, (550, 200))
+
+            for miss in AIMissList:
+                num=int(miss[1])
+                if num == 0:
+                    num = 10
+                xcoord=32*(num - 1)+137
+                ycoord=32*(ord(miss[0])%96 - 1)+237
+                gameDisplay.blit(missIcon, (xcoord, ycoord))
+                
+            for hit in AIHitList:
+                num=int(hit[1])
+                if num == 0:
+                    num = 10
+                xcoord=32*(num - 1)+137
+                ycoord=32*(ord(y[0])%96 - 1)+237
+                print("hit icons should appear at: ", xcoord, ycoord)
+                gameDisplay.blit(hitIcon, (xcoord, ycoord))
+
+            for miss in missList:
+                num=int(miss[1])
+                if num == 0:
+                    num = 10
+                xcoord=32*(num - 1)+587
+                ycoord=32*(ord(miss[0])%96 - 1)+237
+                gameDisplay.blit(missIcon, (xcoord, ycoord))
+                
+            for hit in hitList:
+                num=int(hit[1])
+                if num == 0:
+                    num = 10
+                xcoord=32*((num) - 1)+587
+                ycoord=32*(ord(hit[0])%96 - 1)+237
+                print("hit icons should appear at: ", xcoord, ycoord)
+                gameDisplay.blit(hitIcon, (xcoord, ycoord))
+            
             
             #render keypad
             gameDisplay.blit(numPadA, (1000, 100))
