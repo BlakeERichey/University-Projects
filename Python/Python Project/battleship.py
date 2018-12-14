@@ -215,9 +215,8 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
           replacement.append(i)
       c5Loc = replacement
       if c5Loc != []:
-        print("You hit the enemies Carrier!")
+        pass
       else:
-        print("You sunk the enemies Carrier!")
         c5Loc = []
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
     elif hitOrMiss == "bat":
@@ -227,9 +226,8 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
           replacement.append(i)
       b4Loc = replacement
       if b4Loc != []:
-        print("You hit the enemies Battleship!")
+        pass
       else:
-        print("You sunk the enemies Battleship!")
         b4Loc = []
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
     elif hitOrMiss == "cru":
@@ -239,9 +237,8 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
           replacement.append(i)
       c3Loc = replacement
       if c3Loc != []:
-        print("You hit the enemies Cruiser!")
+        pass
       else:
-        print("You sunk the enemies Cruiser!")
         c3Loc = []
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
     elif hitOrMiss == "sub":
@@ -251,9 +248,8 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
           replacement.append(i)
       s3Loc = replacement
       if s3Loc != []:
-        print("You hit the enemies Submarine!")
+        pass
       else:
-        print("You sunk the enemies Submarine!")
         s3Loc = []
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
     elif hitOrMiss == "des":
@@ -263,14 +259,11 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
           replacement.append(i)
       d2Loc = replacement
       if d2Loc != []:
-        print("You hit the enemies Destroyer!")
+        pass
       else:
-        print("You sunk the enemies Destroyer!")
         d2Loc = []
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
     else:
-      # if the user misses, no changes are made
-      print("Miss! Try Again")
       return c5Loc, b4Loc, c3Loc, s3Loc, d2Loc
 
       
@@ -330,24 +323,11 @@ allPossibleUserPoints.append(userBattleship)
 allPossibleUserPoints.append(userCruiser)
 allPossibleUserPoints.append(userSubmarine)
 allPossibleUserPoints.append(userDestroyer)
-#for testing purposes
-##while allPossibleEnemyPoints != []:
-##  #this is the line of code you would input to call users turn
-##  enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer = userTurn(allPossibleEnemyPoints, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer)
-##  # updating allPossibleEnemyPoints
-##  allPossibleEnemyPoints = enemyCarrier[:]
-##  allPossibleEnemyPoints.append(enemyBattleship)
-##  allPossibleEnemyPoints.append(enemyCruiser)
-##  allPossibleEnemyPoints.append(enemySubmarine)
-##  allPossibleEnemyPoints.append(enemyDestroyer)
-##  # for quick testing purposes
-##  print(allPossibleEnemyPoints)
 
 
 
 ##AI EXECUTION
 playerShipsCoordinates = []
-print(userCarrier, userBattleship, userCruiser, userSubmarine, userDestroyer)
 for x in userCarrier:
     playerShipsCoordinates.append(x)
 for x in userBattleship:
@@ -398,7 +378,6 @@ def helper_afterhitGuess():
     guess = random.choice(smartToGuess)
     smartToGuess.remove(guess)
     if guess in availableGuesses:
-        print("testing... guess is" + str(guess))
         smartGuessed.append(guess)
         availableGuesses.remove(guess)
         alreadyGuessed.append(guess)
@@ -422,12 +401,8 @@ def helper_didhit(guess):
         hitCoordinates.append(guess)
         playerShipsCoordinates.remove(guess)
         AIHitList.append(guess)
-        print("Hit!", guess)
-        #return True
     else:
         AIMissList.append(guess)
-        print("Miss", guess)
-        #return False
 
 #Logic controller function. Will decide what kind of guess to perform
 def helper_attack():
@@ -437,8 +412,6 @@ def helper_attack():
     else:
         return helper_randomGuess()
     
-
-#print(playerShipsCoordinates)
 
 answer = random.randint(1, 100)
 compguess = random.randint(1,10)
@@ -451,13 +424,10 @@ def userMiniGameGuess():
     userdiff = abs(answer - userguess)
     if compdiff > userdiff:
         flagUserTurn = 1
-        print("you win! you'll go first")
     elif userdiff > compdiff:
         flagAITurn = 1
-        print("you lose! the computer will go first")
     else:
         flagUserTurn = 1
-        print("it was a tie! you'll go first")
 
 #toggle turns
 def turnController():
@@ -581,7 +551,6 @@ def run_game():
                     if ((mx < 375  and mx > 40) and (my < 495 and my > 445)):
                         Title=False
                         HowTo1=True
-                        print("How to play")
 
                     #Cheats
                     if ((mx < 200  and mx > 40) and (my < 575 and my > 535)):
