@@ -3,6 +3,8 @@ import random
 
 flagUserTurn = 0;
 flagAITurn = 0;
+PLAYERWINS=False
+AIWINS=False
 
 AIHitList = []
 AIMissList = []
@@ -147,47 +149,43 @@ def enemyChecker(setLocations, tester, length):
     return tester
 
 def checkForWinner():
-    global playerShipsCoordinates, enemyLocs
+    global playerShipsCoordinates, enemyLocs, AIWINS, PLAYERWINS
     if playerShipsCoordinates == []:
         print("Game Over! You Lose!")
+        AIWINS=True
         return True
     elif enemyLocs == []:
         print("Game Over! You Win!")
+        PLAYERWINS=True
         return True
     else:
         return False
 
-# setting up each ship location
 def setUserShipLocations():
-    global userCarrier, userBattleship, userCruiser, userSubmarine, userDestroyer, userLocs  
+    global userCarrier, userBattleship, userCruiser, userSubmarine, userDestroyer, userLocs
     # placing the carrier within boundaries
     userCarrier = setShipLocations(battlefield, ships[0][1])
-    # ammending the complete list of coordinates
     userLocs = userCarrier[:]
     # placing the battleship within boundaries
     userBattleship = setShipLocations(battlefield, ships[1][1])
-    # checking that the battleship does not overlap any previous ships
     userBattleship = userChecker(userLocs, userBattleship, ships[1][1])
-    # ammedning the complete list of coordinates
-    userLocs.append(userBattleship)
+    for s in userBattleship:
+        userLocs.append(s)
     # placing the cruiser within boundaries
     userCruiser = setShipLocations(battlefield, ships[2][1])
-    # checking that the cruiser does not overlap any previous ships
     userCruiser = userChecker(userLocs, userCruiser, ships[2][1])
-    # ammedning the complete list of coordinates
-    userLocs.append(userCruiser)
+    for s in userCruiser:
+        userLocs.append(s)
     # placing the submarine within boundaries
     userSubmarine = setShipLocations(battlefield, ships[3][1])
-    # checking that the submarine does not overlap any previous ships
     userSubmarine = userChecker(userLocs, userSubmarine, ships[3][1])
-    # ammedning the complete list of coordinates
-    userLocs.append(userSubmarine)
+    for s in userSubmarine:
+        userLocs.append(s)
     # placing the destroyer within boundaries
     userDestroyer = setShipLocations(battlefield, ships[4][1])
-    # checking that the destroyer does not overlap any previous ships
     userDestroyer = userChecker(userLocs, userDestroyer, ships[4][1])
-    # ammedning the complete list of coordinates
-    userLocs.append(userDestroyer)
+    for s in userDestroyer:
+        userLocs.append(s)
     # returning complete list and individual coordinates
     return userLocs, userCarrier, userBattleship, userCruiser, userSubmarine, userDestroyer
 
@@ -208,9 +206,7 @@ def userTurn(allPossiblePoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate):
     # resets replacement variable - needed because tuples
     replacement = []
     # takes in the user's guess
-    coordinate = list(coordinate)
-    coordinate[1] = int(coordinate[1])
-    coordinate = tuple(coordinate)
+    coordinate = helper_userGuessCheck(coordinate)
     print("Firing at " + str(coordinate) + "...")
     # determines if the guess is where an enemy has placed a ship
     hitOrMiss = helper_hitOrMiss(allPossibleEnemyPoints, c5Loc, b4Loc, c3Loc, s3Loc, d2Loc, coordinate)
@@ -295,37 +291,11 @@ def helper_userGuessCheck(userInput):
     global coordinate
     # turns string into list
     coordinate = list(userInput)
-    # changes letter into ascii
-    letter = ord(coordinate[0])
-    # verifies second input is an integer
-    try:
-      number = int(coordinate[1])
-    except:
-      # if the sceond input is not valid, takes another input
-      print("Invalid coordinate, please try again.")
-      helper_userGuess()
-    # if letter is valid, continue
-    if letter > 96 and letter < 107:
-        pass
-    # takes valid letters and makes them lowercase
-    elif letter > 64 and letter < 75:
-        letter += 32
-        letter = chr(letter)
-    # first input was not a letter, asks for another input
-    else:
-        print("Invalid coordinate, please try again.")
-        helper_userGuess()
-    # checks for a valid number 
-    if 0 <= number <= 9:
-        if number == 0:
-            number = 10
-    #if number is not valid, then takes another input
-    else:
-        print("Invalid coordinate, please try again.")
-        helper_userGuess()
-    # ensures the second imput( the number) is an integer
-    coordinate[1] = int(number)
+    #changes 0 into 10
+    if coordinate[1] == '0':
+        coordinate[1] = 10
     # returns the coordinates as a tuple
+    coordinate = tuple(coordinate)
     return  coordinate
 
 # checks if the user input hits the enemy's ships
@@ -530,6 +500,8 @@ def run_game():
     backgroundHighScores=pygame.image.load('./resources/ScoresScreen.jpg')
     hitIcon=pygame.image.load('./resources/hitIcon.png')
     missIcon=pygame.image.load('./resources/missIcon.png')
+    WinScreen=pygame.image.load('./resources/Win.jpg')
+    GameOverScreen=pygame.image.load('./resources/GameOver.jpg')
 
     
     display_width = 1200
@@ -557,13 +529,22 @@ def run_game():
     numPadI = pygame.image.load('./resources/numPadI.png')
     numPadJ = pygame.image.load('./resources/numPadJ.png')
     numPadFire = pygame.image.load('./resources/numPadFire.png')
-
+    VCarSprite = pygame.image.load('./resources/CarrierA.png')
+    VBatSprite = pygame.image.load('./resources/BattleshipA.png')
+    VCruSprite = pygame.image.load('./resources/CruiserA.png')
+    VSubSprite = pygame.image.load('./resources/SubmarineA.png')
+    VDesSprite = pygame.image.load('./resources/DestroyerA.png')
+    HCarSprite = pygame.image.load('./resources/CarrierB.png')
+    HBatSprite = pygame.image.load('./resources/BattleshipB.png')
+    HCruSprite = pygame.image.load('./resources/CruiserB.png')
+    HSubSprite = pygame.image.load('./resources/SubmarineB.png')
+    HDesSprite = pygame.image.load('./resources/DestroyerB.png')
 
     
 
 
     gameDisplay = pygame.display.set_mode((display_width, display_height))
-    pygame.display.set_caption('My Cool Game!')
+    pygame.display.set_caption('Amazing Brilliantly/Creatively Developed Eccentric Fabulous GUI for BattleShip PC!')
     clock = pygame.time.Clock()
     gameDisplay.fill(background)
 
@@ -619,6 +600,40 @@ def run_game():
                 gameDisplay.fill(background)
 
                 gameDisplay.blit(backgroundTitle, (0, 0))
+                time.sleep(.03)
+                pygame.display.update()
+
+        while Win:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                    
+                #Monitor when mouse is pressed
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #get position of mouse and save it ss mx and my
+                    mx, my = pygame.mouse.get_pos()
+
+                gameDisplay.fill(background)
+
+                gameDisplay.blit(WinScreen, (0, 0))
+                time.sleep(.03)
+                pygame.display.update()
+
+        while GameOver:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                    
+                #Monitor when mouse is pressed
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #get position of mouse and save it ss mx and my
+                    mx, my = pygame.mouse.get_pos()
+
+                gameDisplay.fill(background)
+
+                gameDisplay.blit(GameOverScreen, (0, 0))
                 time.sleep(.03)
                 pygame.display.update()
 
@@ -711,11 +726,17 @@ def run_game():
             userMiniGameGuess()
         while mainGame:
             global flagAITurn, flagUserTurn, enemyCarrier, enemyBattleship, enemyCruiser, enemySubmarine, enemyDestroyer, gamePadCoordinate, enemyLocs, playerShipsCoordinates,  AIHitList, AIMissList
+            global userCarrier, userDestroyer, userBattleship, userSubmarine, userCruiser, AIWINS, PLAYERWINS
 
             turnController()
     
             if checkForWinner():
-                exit
+                if AIWINS == True:
+                    mainGame=False
+                    GameOver=True
+                elif PLAYERWINS == True:
+                    mainGame = False
+                    Win = True
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -803,6 +824,8 @@ def run_game():
                             #guess = "('" + gamePadCoordinate[0] + "', " + gamePadCoordinate[1] + ")"
                             guess=list(gamePadCoordinate)
                             guess[1] = int(guess[1])
+                            if guess[1] == 0:
+                                guess[1] = 10
                             guess = tuple(guess)
                             print(guess)
     
@@ -828,6 +851,102 @@ def run_game():
             #player battlefield
             gameDisplay.blit(Battlefield, (100, 200))
 
+            ##render ships
+            if userCarrier[0][0] == userCarrier[1][0]: #means ship is horizontal
+                userCarrier.sort(key = lambda x: int(x[1])) #sort by horizontal
+                xcoord=32*(userCarrier[0][1] - 1)+137
+                ycoord=32*(ord(userCarrier[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(HCarSprite, pixels)
+            else:
+                userCarrier.sort(key = lambda x: x[0]) #sort by vertical
+                xcoord=32*(userCarrier[0][1] - 1)+137
+                ycoord=32*(ord(userCarrier[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(VCarSprite, pixels)
+
+            if userBattleship[0][0] == userBattleship[1][0]:
+                userBattleship.sort(key = lambda x: int(x[1])) #sort by horizontal
+                xcoord=32*(userBattleship[0][1] - 1)+137
+                ycoord=32*(ord(userBattleship[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(HBatSprite, pixels)
+            else:
+                userBattleship.sort(key = lambda x: x[0]) #sort by vertical
+                xcoord=32*(userBattleship[0][1] - 1)+137
+                ycoord=32*(ord(userBattleship[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(VBatSprite, pixels)
+
+            if userCruiser[0][0] == userCruiser[1][0]:
+                userCruiser.sort(key = lambda x: int(x[1])) #sort by horizontal
+                xcoord=32*(userCruiser[0][1] - 1)+137
+                ycoord=32*(ord(userCruiser[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(HCruSprite, pixels)
+            else:
+                userCruiser.sort(key = lambda x: x[0]) #sort by vertical
+                xcoord=32*(userCruiser[0][1] - 1)+137
+                ycoord=32*(ord(userCruiser[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(VCruSprite, pixels)
+                
+            if userSubmarine[0][0] == userSubmarine[1][0]:
+                userSubmarine.sort(key = lambda x: int(x[1])) #sort by horizontal
+                xcoord=32*(userSubmarine[0][1] - 1)+137
+                ycoord=32*(ord(userSubmarine[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(HSubSprite, pixels)
+            else:
+                userSubmarine.sort(key = lambda x: x[0]) #sort by vertical
+                xcoord=32*(userSubmarine[0][1] - 1)+137
+                ycoord=32*(ord(userSubmarine[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(VSubSprite, pixels)
+
+            if userDestroyer[0][0] == userDestroyer[1][0]:
+                userDestroyer.sort(key = lambda x: int(x[1])) #sort by horizontal
+                xcoord=32*(userDestroyer[0][1] - 1)+137
+                ycoord=32*(ord(userDestroyer[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(HDesSprite, pixels)
+            else:
+                userDestroyer.sort(key = lambda x: x[0]) #sort by vertical
+                xcoord=32*(userDestroyer[0][1] - 1)+137
+                ycoord=32*(ord(userDestroyer[0][0])%96 - 1)+237
+                pixels = []
+                pixels.append(xcoord)
+                pixels.append(ycoord)
+                pixels = tuple(pixels)
+                gameDisplay.blit(VDesSprite, pixels)
+
             #ai battlefield
             gameDisplay.blit(Battlefield, (550, 200))
 
@@ -844,8 +963,7 @@ def run_game():
                 if num == 0:
                     num = 10
                 xcoord=32*(num - 1)+137
-                ycoord=32*(ord(y[0])%96 - 1)+237
-                print("hit icons should appear at: ", xcoord, ycoord)
+                ycoord=32*(ord(hit[0])%96 - 1)+237
                 gameDisplay.blit(hitIcon, (xcoord, ycoord))
 
             for miss in missList:
@@ -862,7 +980,6 @@ def run_game():
                     num = 10
                 xcoord=32*((num) - 1)+587
                 ycoord=32*(ord(hit[0])%96 - 1)+237
-                print("hit icons should appear at: ", xcoord, ycoord)
                 gameDisplay.blit(hitIcon, (xcoord, ycoord))
             
             
