@@ -19,7 +19,7 @@ int main()
 	getline(cin, mystr);*/
 	system("pause");
 	int sum = total(5);
-	cout << "sum is " << sum;
+	cout << "sum is " << sum << endl;
 
 
 
