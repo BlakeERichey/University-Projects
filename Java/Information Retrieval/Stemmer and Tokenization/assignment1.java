@@ -19,7 +19,7 @@ public class assignment1 {
     Stemmer stemmer = new Stemmer();
     
     String input = Input("Enter the direct path of the file to be tokenized: " + 
-        "(e.g. C:/Users/Blake/Desktop/example.txt)");   
+        "(e.g. C:\\Users\\Blake\\eclipse-workspace\\IRAssignment1\\src\\robertfrost.txt)");   
     boolean res = false;
     if(input != null) {
       res = Confirm("Is the following correct?", input);
@@ -34,9 +34,9 @@ public class assignment1 {
         while(file.hasNextLine()) {
           fileContents += file.nextLine() + "\n";
         }
-        System.out.println(fileContents);
+//        System.out.println(fileContents);     //log out file contents
         
-        //stem words and generate list
+        //stem words and generate token list
         for(int index = 0; index < fileContents.length(); index++) {
           char currentChar = fileContents.charAt(index);
           //build word, one character at a time
@@ -53,13 +53,33 @@ public class assignment1 {
             //add word to tokens list, dont add repeats
             if(!stem.isEmpty() && stem != null && !tokensList.isInList(stem)) {
               tokensList.addNode(stem);              
-              System.out.println("word added to index: " + stemmer.toString());
             }
             stemmer = new Stemmer();    //reset stemmer to empty array of chars
           }          
         }
         
-        System.out.println("Total unique tokens: " + tokensList.getLength());
+        //display token information
+        Columns display = new Columns();
+        String[] list = tokensList.getList();
+        for(int x = 0; x<list.length; x++) {
+          if(list.length - x >= 5) { //number of words per row
+            display.addLine(list[x++], list[x++], list[x++], list[x++], list[x++]);
+          }else {
+            if(list.length - x == 4) {
+              display.addLine(list[x++], list[x++], list[x++], list[x++]);
+            }
+            if(list.length - x == 3) {
+              display.addLine(list[x++], list[x++], list[x++]);
+            }
+            if(list.length - x == 2) {
+              display.addLine(list[x++], list[x++]);
+            }
+            if(list.length - x == 1) {
+              display.addLine(list[x++]);
+            }
+          }
+        }
+        Output("Tokens:\n" + display.toString() + "\nNumber of unique Tokens: " + tokensList.getLength());
       
       } catch (FileNotFoundException err) {
         Output("Sorry. The file: \'" + input + "\' was not found.");

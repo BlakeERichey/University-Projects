@@ -21,8 +21,7 @@ public class LinkedList {
       head = new Node(data);
       tail = head;
       length = 1;
-    }
-    if(length == 1) {
+    }else if(length == 1) {
       Node tempNode = new Node(data);
       tail = tempNode;
       head.setNext(tail);
@@ -58,5 +57,22 @@ public class LinkedList {
   
   public int getLength() {
     return length;
+  }
+  
+  public String[] getList() {
+    String[] list = new String[length];
+    
+    Node currentNode = head;
+    int index = 0;
+    //add items from linked list into an array
+    while(currentNode.getNext() != null) {
+      list[index++] = currentNode.getData();
+      currentNode = currentNode.getNext();
+    }
+    
+    //add last node
+    list[length-1] = currentNode.getData();
+    
+    return list;
   }
 }
