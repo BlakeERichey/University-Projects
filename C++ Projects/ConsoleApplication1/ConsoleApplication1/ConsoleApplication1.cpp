@@ -4,6 +4,9 @@
 #include "pch.h"
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <cstdlib>
+
 using namespace std;
 
 int total(int maxVal);
@@ -33,20 +36,44 @@ int main()
 	cout << bucky.name;*/	//displays bucky
 
 	//***pointers practice***
-	int fish = 5;
-	cout << &fish << endl;	//prints address of fish variable
-	int *fishPointer;		//initialize pointer
-	fishPointer = &fish;	//sets pointer to memory address of fish
-	cout << fishPointer << endl; //should be same as earlier cout
+	//int fish = 5;
+	//cout << &fish << endl;	//prints address of fish variable
+	//int *fishPointer;		//initialize pointer
+	//fishPointer = &fish;	//sets pointer to memory address of fish
+	//cout << fishPointer << endl; //should be same as earlier cout
 
-	int betty = 13;
-	int sandy = 13;
+	//int betty = 13;
+	//int sandy = 13;
 
-	passByValue(betty);
-	passByReference(&sandy);
+	//passByValue(betty);
+	//passByReference(&sandy);
 
-	cout << "betty is now" << betty << endl;
-	cout << "sandy is now" << sandy << endl;
+	//cout << "betty is now" << betty << endl;
+	//cout << "sandy is now" << sandy << endl;
+
+	//***read/write from/to file***
+	//requires <fstream> and <cstlib>
+	//read
+	//char filename[50];
+	//ifstream bucky;
+	//cin.getline(filename, 50); //stores cin into variable filename
+	//bucky.open(filename);
+	//if (!bucky.is_open()) { //file did not open?
+	//	exit(EXIT_FAILURE);
+	//}
+	//
+	//char word[50];
+	//bucky >> word;
+	//while (bucky.good()) { //while not end of file
+	//	cout << word << " ";
+	//	bucky >> word;		//get next word
+	//}
+	////write
+	//ofstream myfile;
+	//myfile.open("newfile.txt", ios::app);	//overwrites file unless include ios::app (append)
+	//myfile << "Add to file?" << endl;
+	//myfile.close();
+
 
 	//***input output practice***
 	/*string mystr;
