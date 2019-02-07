@@ -11,3 +11,5 @@ est
 myFit2=LinearModel.stepwise(X,Y); %ignores irrelevant linear data
 disp(myFit2);
 plot(myFit2);
+%weight = weight column
+%myFit4=LinearModel.fit(weight, Y, 'poly2'); % quadratic model
