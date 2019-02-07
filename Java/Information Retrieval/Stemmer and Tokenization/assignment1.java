@@ -34,7 +34,6 @@ public class assignment1 {
         while(file.hasNextLine()) {
           fileContents += file.nextLine() + "\n";
         }
-//        System.out.println(fileContents);     //log out file contents
         
         //stem words and generate token list
         for(int index = 0; index < fileContents.length(); index++) {
@@ -59,27 +58,13 @@ public class assignment1 {
         }
         
         //display token information
-        Columns display = new Columns();
+        System.out.println("Token info:");
         String[] list = tokensList.getList();
         for(int x = 0; x<list.length; x++) {
-          if(list.length - x >= 5) { //number of words per row
-            display.addLine(list[x++], list[x++], list[x++], list[x++], list[x++]);
-          }else {
-            if(list.length - x == 4) {
-              display.addLine(list[x++], list[x++], list[x++], list[x++]);
-            }
-            if(list.length - x == 3) {
-              display.addLine(list[x++], list[x++], list[x++]);
-            }
-            if(list.length - x == 2) {
-              display.addLine(list[x++], list[x++]);
-            }
-            if(list.length - x == 1) {
-              display.addLine(list[x++]);
-            }
-          }
+           System.out.println(list[x]);
         }
-        Output("Tokens:\n" + display.toString() + "\nNumber of unique Tokens: " + tokensList.getLength());
+        System.out.println("Unique Tokens: " + list.length);
+        Output("Token info is located in your console. Thanks for using the software!");
       
       } catch (FileNotFoundException err) {
         Output("Sorry. The file: \'" + input + "\' was not found.");
