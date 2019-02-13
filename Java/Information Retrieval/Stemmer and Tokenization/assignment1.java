@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 
-public class assignment1 {
+public class Assignment1 {
 
   public static void main(String[] args) {	
     Stemmer stemmer = new Stemmer();
