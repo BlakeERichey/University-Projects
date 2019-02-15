@@ -1,5 +1,3 @@
 ﻿  Source.cpp
-c:\myproject\university-projects\c++ projects\registerinterpreter\registerinterpreter\source.cpp(10): warning C4101: 'ram': unreferenced local variable
-c:\myproject\university-projects\c++ projects\registerinterpreter\registerinterpreter\source.cpp(11): warning C4101: 'registers': unreferenced local variable
-c:\myproject\university-projects\c++ projects\registerinterpreter\registerinterpreter\source.cpp(39): warning C4101: 'e': unreferenced local variable
+c:\myproject\university-projects\c++ projects\registerinterpreter\registerinterpreter\source.cpp(45): warning C4101: 'e': unreferenced local variable
   RegisterInterpreter.vcxproj -> C:\myProject\University-Projects\C++ Projects\RegisterInterpreter\Debug\RegisterInterpreter.exe
