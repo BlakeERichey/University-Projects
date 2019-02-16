@@ -31,6 +31,21 @@ void spit(int array[],int qty) {
 	}
 }
 
+//displays qty number of elements from an array and displays msg at the front of each one
+void spit(int array[], int qty, std::string msg) {
+	for (int index = 0; index < qty; index++) {
+		std::cout << msg << array[index] << std::endl;
+	}
+}
+
+//displays qty number of elements from an array and displays msg at the front of each one including index
+void spit(int array[], int qty, std::string msg, bool log) {
+	for (int index = 0; index < qty; index++) {
+		std::cout << msg  << " " << index  << ": " << array[index] << std::endl;
+	}
+}
+
+//converts int, val, to a string
 std::string intToString(int val) {
 	std::stringstream ss;
 	ss << val << std::endl;

@@ -1,16 +1,22 @@
+//Blake Richey
+//COSC 3355 - Operating Systems
+//Dr Rainwater
+//This program is designed to simulate a process in execution that is loaded into ram
+//and act as an interpreter for machine language, altering values in registers etc.
+
 #include "brichey.h"
 
 using namespace std;
 
 void restart();
-bool runCmd(int *ic, int registers[], int ram[], int *accum);
+bool runProcess(int *pc, int registers[], int ram[], int *ic);
 
 int main() {
 	//initialize variables
 	int ram[1000];
 	int registers[10];
-	int ic = 0;	//next instruction to be run
-	int accum = 0; //total num of instruction run
+	int pc = 0;	//next instruction to be run
+	int ic = 0; //total num of instruction run
 	string	 filename;
 	ifstream readFile;
 	ofstream writeFile;
@@ -52,16 +58,17 @@ int main() {
 	}
 	readFile.close();
 
+	//***run process***
 	bool run = true;
 	while (run) {
-		run = runCmd(&ic, registers, ram, &accum);
+		run = runProcess(&pc, registers, ram, &ic);
 	}
 
-	cout << "Registers 0-9:" << endl;
-	spit(registers, 10); //display registers
-	//cout << "Ram:" << endl;
-	//spit(ram, 20);
-	cout << "ic: " << ic << " accum " << accum << endl;
+	//***Display results***
+	cout << "\n\n******RESULTS******\n";
+	spit(registers, 10, "Register", true); //display registers
+	cout << "\nNumber of Instructions Executed: " << ic << endl;
+	cout << "*******************\n";
 
 	
 	cout << endl << "Pausing before exiting..." << endl;
@@ -78,14 +85,15 @@ void restart() {
 }
 
 //runs executions loaded in ram
-bool runCmd(int *ic, int registers[], int ram[], int *accum) {
-	*accum = *accum + 1; //increase number of instructions run
+bool runProcess(int *pc, int registers[], int ram[], int *ic) {
+	*ic = *ic + 1; //increase number of instructions run
 	string instr;
-	if (ram[*ic] == 100) { return false; } //cease execution
+	if (ram[*pc] == 100) { return false; } //cease execution
 	else{
-		instr = intToString(ram[*ic]);
+		instr = intToString(ram[*pc]);
 	}
-
+	if (instr.length() - 1 == 2) { instr = "0" + instr; } //if cmd starts with 0, since number was read in as an int originally
+	
 	char type = instr.at(0);	//type of cmd to execute
 	int x	  = to_int(instr.at(1));	//variable changes in purpose
 	int y     = to_int(instr.at(2));	//variable changes in purpose
@@ -112,10 +120,23 @@ bool runCmd(int *ic, int registers[], int ram[], int *accum) {
 		registers[x] = registers[x] + registers[y];
 		registers[x] = registers[x] % 1000;
 	}
-	else if (type == '0') {
-		cout << "Hello" << endl;
+	else if (type == '8') {
+		registers[x] = ram[registers[y]];
+	}
+	else if (type == '9') {
+		ram[registers[y]] = registers[x];
 	}
 	
-	*ic = *ic + 1;
+	if (type == '0') {
+		if (registers[y] != 0) {
+			*pc = registers[x];
+		}
+		else{
+			*pc = *pc + 1;
+		}
+	}
+	else {
+		*pc = *pc + 1;
+	}
 	return true; 
 }
