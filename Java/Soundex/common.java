@@ -142,42 +142,6 @@ public class common {
     return newString;
   }
   
-  //hashes word via soundex algorithm and returns the result
-  public static String soundexHash(String word) {
-    String hash = "";
-    if(word.length() > 0) { //first letter of hash
-      hash = getLetter(word, 0);
-    
-      for(int x = 1; x<word.length(); x++) { //remainder of char hashing
-        char letter = Character.toLowerCase(word.charAt(x));
-        if(contains("aeiouhwy", letter)) {
-          hash += "0";
-        }else if(contains("bfpv", letter)) {
-          hash += "1";
-        }else if(contains("cgjkqsxz", letter)) {
-          hash += "2";
-        }else if(contains("dt", letter)) {
-          hash += "3";
-        }else if(contains("l", letter)) {
-          hash += "4";
-        }else if(contains("mn", letter)) {
-          hash += "5";
-        }else if(contains("r", letter)) {
-          hash += "6";
-        }
-      }
-      
-      //remove repeat characters
-      hash = removeRepeats(hash);
-      //remove 0s
-      hash = removeZeros(hash);
-      //ensure string is of length 4
-      hash = padString(hash, 4, "0");
-      hash = hash.substring(0,4);
-    }else { return ""; }
-    return hash;
-  }
-  
   //prints out all elements of an array
   public static void spit(int[] arr) {
     String rv = "";
