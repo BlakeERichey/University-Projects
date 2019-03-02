@@ -1,5 +1,6 @@
 //Library of custom functions made by Blake Richey
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 public class common {
   
@@ -7,6 +8,11 @@ public class common {
     
   }
   
+  //val:        string being displayed to user
+  public static void Alert(String val) {
+    JOptionPane.showMessageDialog(null, val);
+  }
+
   //params
   //name:       what to ask the user
   //val:        what to confirm the user meant
@@ -94,11 +100,12 @@ public class common {
   public static void log(String value) {
     System.out.println(value);
   }
-  
-  //val:        string being displayed to user
-  public static void Output(String val) {
-    JOptionPane.showMessageDialog(null, val);
-  }
+
+    //val:        string being displayed to user
+	  public static void Output(String msg) {
+	    JOptionPane.showMessageDialog(null, new JTextArea(msg));
+	  }
+
   
   //return new string with a minimum length of minLength
   //word:       word to be padded
