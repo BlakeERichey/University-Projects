@@ -9,6 +9,43 @@ int total(int x, int y) {
 	return x + y;
 }
 
+//adds all indexes of source arr to target arr
+void addArr(int source[], int target[], int qty) {
+	for (int index = 0; index < qty; index++) {
+		target[index] += source[index];
+	}
+}
+
+void clearConsole() {
+	system("CLS");
+}
+
+//replaces all values in target array with values in source
+void copyArr(int source[], int target[], int qty) {
+	for (int index = 0; index < qty; index++) {
+		target[index] = source[index];
+	}
+}
+
+//reads value from console and verifies it is an int, then returns that value
+//msg:	msg to display to console
+int getInt(std::string msg = "Enter value: ") {
+	std::string num = "";
+	int rv = -32767;
+	std::cout << msg;
+	getline(std::cin, num);	 //get int value from console
+	try
+	{
+		int rv = std::stoi(num); //return value
+		return rv;
+	}
+	catch (const std::exception&)
+	{
+		std::cout << std::endl << "Invalid number. Try again" << std::endl;
+		return getInt(msg);
+	}
+}
+
 //takes val address and changes its value to whatever is input to the console
 std::string & Input(std::string &val) {
 	val.clear();		//reinitialize val
@@ -22,6 +59,21 @@ void initArray(int arr[], int size, int val) {
 	for (int x = 0; x < size; x++) {
 		arr[x] = val;
 	}
+}
+
+//returns if first qty values in array are == 0
+bool isEmpty(int arr[], int qty) {
+	for (int index = 0; index < qty; index++) {
+		if (arr[index] != 0) { return false; }
+	}
+	return true;
+}
+
+void printArr(int arr[], int qty) {
+	for (int index = 0; index < qty; index++) {
+		std::cout << arr[index] << "  ";
+	}
+	std::cout << std::endl;
 }
 
 //displays qty number of elements from an array
