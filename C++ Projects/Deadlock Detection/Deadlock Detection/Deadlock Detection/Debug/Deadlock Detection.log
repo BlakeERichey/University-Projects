@@ -1,6 +1,6 @@
 ﻿  Source.cpp
 c:\myproject\university-projects\c++ projects\deadlock detection\deadlock detection\deadlock detection\source.cpp(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\myproject\university-projects\c++ projects\deadlock detection\deadlock detection\deadlock detection\source.cpp(37): warning C4018: '<': signed/unsigned mismatch
-c:\myproject\university-projects\c++ projects\deadlock detection\deadlock detection\deadlock detection\source.cpp(53): warning C4018: '<': signed/unsigned mismatch
-c:\myproject\university-projects\c++ projects\deadlock detection\deadlock detection\deadlock detection\source.cpp(65): warning C4018: '<': signed/unsigned mismatch
+c:\myproject\university-projects\c++ projects\deadlock detection\deadlock detection\deadlock detection\source.cpp(54): warning C4018: '<': signed/unsigned mismatch
+c:\myproject\university-projects\c++ projects\deadlock detection\deadlock detection\deadlock detection\source.cpp(67): warning C4018: '<': signed/unsigned mismatch
   Deadlock Detection.vcxproj -> C:\myProject\University-Projects\C++ Projects\Deadlock Detection\Deadlock Detection\Debug\Deadlock Detection.exe

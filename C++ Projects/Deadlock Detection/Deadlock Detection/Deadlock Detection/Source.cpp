@@ -4,12 +4,11 @@ using namespace std;
 
 void displayResourceLine(int resources);
 bool isValidRequest(int request[], int work[], int qty);
-bool terminate(int request[][100], int work[], int processQty, int finish[], int resourceQty);
 
 int main() {
 	const int MAX_CAPACITY = 100;	//maximum number of resources and processes
-	const int processes = getInt("Enter number of processes: ");
-	const int resources = getInt("Enter number of resources: ");
+	const int processes = getInt("Enter number of processes (max 100): ");
+	const int resources = getInt("Enter number of resources (max 100): ");
 
 	int work[MAX_CAPACITY];		//which resources are available while a request is taking place
 	int finish[MAX_CAPACITY];	//which processes are complete
@@ -25,6 +24,7 @@ int main() {
 	
 	//input values for allocation matrix
 	clearConsole();
+	cout << "Allocation Matrix: " << processes << " Processes, " << resources << " Resources." << endl;
 	cout << "Initializing Allocation Matrix... Sample Input for a 5 Resource Process Allocation: 12300" << endl;
 	for (int process = 0; process < processes; process++) {
 		cout << "Enter Allocation Array for Process " << process << ": ";
@@ -41,6 +41,7 @@ int main() {
 
 	//Input values for request matrix
 	clearConsole();
+	cout << "Request Matrix: " << processes << " Processes, " << resources << " Resources." << endl;
 	cout << "Initializing Request Matrix... Sample Input for a 5 Resource Process Allocation: 12300" << endl;
 	for (int process = 0; process < processes; process++) {
 		cout << "Enter Request for Process " << process << ": ";
@@ -57,6 +58,7 @@ int main() {
 
 	//input values for available resources vector
 	clearConsole();
+	cout << "Available Resources Vector: " << resources << " Resources." << endl;
 	cout << "Enter Values for Available Vector... Sample input for a 5 Resource System: 13521" << endl;
 	//take input
 	string num = "";
@@ -74,29 +76,37 @@ int main() {
 		}
 	}
 
-	cout << "Finish Array: " << endl;
-	printArr(finish, processes);
-
 	//---------------Step 2 to Algorithm---------------
-	bool resume = !terminate(request_matrix, work, processes, finish, resources); //continue?
-	while (resume) {
-		for (int process = 0; process < processes; process++) {
-			cout << "continue";
+	bool run = true;
+	while (run) {
+		run = false;
+		int process = 0;
+		for (process; process < processes; process++) {
+			if (finish[process] == false
+				&& isValidRequest(request_matrix[process], work, resources)) {
+				break;
+			}
+		}
+		if (process < processes) { //---------------Step 3 to Algorithm---------------
+			cout << "Process " << process << " can be allocated space... Running again..." << endl;
+			addArr(allocation_table[process], work, resources);
+			finish[process] = true;
+			run = true;	//resources have changed, rerun
 		}
 	}
 
-	/*
-	clearConsole();
+	
 	//---------------Display Results---------------
+	clearConsole();
 	//Display Allocation Matrix
-	cout << endl << endl << "Allocated" << endl;
+	cout << "Allocated" << endl;
 	displayResourceLine(resources);
 	for (int process = 0; process < processes; process++) {
 		printArr(allocation_table[process], resources);
 	}
 
 	//Display Available Resources Vector
-	cout << "Available" << endl;
+	cout << endl << endl << "Available" << endl;
 	displayResourceLine(resources);
 	printArr(available_matrix, resources);
 
@@ -107,7 +117,26 @@ int main() {
 		printArr(request_matrix[process], resources);
 	}
 
-	*/
+	//---------------Step 4 to Algorithm---------------
+	bool deadlocked = false;
+	for (int process = 0; process < processes; process++) {
+		if (finish[process] == 0) { //unfinished processes?
+			deadlocked = true; 
+			break; 
+		}
+	}
+
+	//Display Deadlock Status
+	cout << endl << endl;
+	if (deadlocked) {
+		cout << "System is deadlocked, the deadlocked processes are:" << endl;
+		for (int process = 0; process < processes; process++) {
+			if (finish[process] == 0) { cout << "Process " << process << endl; }
+		}
+	}
+	else {
+		cout << "System is not deadlocked, all processes can complete." << endl;
+	}
 
 	cout << endl << "Pausing before exiting..." << endl;
 	system("pause");
@@ -129,20 +158,4 @@ bool isValidRequest(int request[], int work[], int qty) {
 		if (request[index] > work[index]) { return false; }
 	}
 	return true;
-}
-
-//returns true if all conditions are present to terminate the program
-//request: request matrix
-//work:	   work matrix
-bool terminate(int request[][100], int work[], int processQty, int finish[], int resourceQty) {
-
-	bool allValid = true;
-	for (int process = 0; process < processQty; process++) {
-		if (!(finish[process] == 0
-			&& isValidRequest(request[process], work, resourceQty)))
-		{
-			allValid = false;
-		}
-	}
-	return allValid;
 }
