@@ -1,0 +1,35 @@
+drop table student;
+
+create table student (
+    StuID number,
+    StuName varchar2(10),
+    Year char(2),
+    GPA number(2, 1),
+    primary key(StuID),
+    check(GPA between 0 and 4)
+);
+
+insert into student(StuID, StuName, Year, GPA)
+values(123, 'Alpha', 'SR', 3.5);
+
+insert into student(StuID, StuName, Year, GPA)
+values(234, 'Beta', 'SR', 2.8);
+
+insert into student(StuID, StuName, Year, GPA)
+values(345, 'Gamma', 'JR', 3.3);
+
+insert into student(StuID, StuName, Year, GPA)
+values(456, 'Delta', 'SO', 2.5);
+
+insert into student(StuID, StuName, Year, GPA)
+values(567, 'Theta', 'SO', 4.0);
+
+insert into student(StuID, StuName, Year, GPA)
+values(678, 'Iota', 'FR', 3.8);
+
+insert into student(StuID, StuName, Year, GPA)
+values(789, 'Kappa', 'FR', 3.0);
+
+commit;
+
+select * from student;
