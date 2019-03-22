@@ -6,7 +6,8 @@ create table student (
     Year char(2),
     GPA number(2, 1),
     primary key(StuID),
-    check(GPA between 0 and 4)
+    check(GPA between 0 and 4),
+    check(Year IN('FR', 'SO', 'JR', 'SR')
 );
 
 insert into student(StuID, StuName, Year, GPA)
