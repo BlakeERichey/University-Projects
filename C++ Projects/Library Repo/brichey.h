@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
+#include <math.h>
 
 int total(int x, int y) {
 	return x + y;
@@ -25,6 +26,17 @@ void copyArr(int source[], int target[], int qty) {
 	for (int index = 0; index < qty; index++) {
 		target[index] = source[index];
 	}
+}
+
+//returns euclidean distance between 2 arrays given capacity of arrSize
+double distanceArr(int arr[], int arr2[], int arrSize) {
+	int index = 0;
+	double distance = 0;
+	for (index; index < arrSize; index++) {
+		distance += pow((arr[index] - arr2[index]), 2);
+	}
+	distance = pow(distance, 1.0 / arrSize);
+	return distance;
 }
 
 //reads value from console and verifies it is an int, then returns that value
