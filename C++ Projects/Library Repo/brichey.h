@@ -109,6 +109,26 @@ void spit(int array[], int qty, std::string msg, bool log) {
 	}
 }
 
+//arr: array of values to find std dev of
+//qty: size of array/number of indexes to include in result
+double stDev(double arr[], int qty) {
+	double sum = 0;
+	for (int index = 0; index < qty; index++) {
+		sum += arr[index];
+	}
+
+	double meanSample = sum / double(qty);
+
+	double sqDevSum = 0;
+
+	for (int index = 0; index < qty; index++) {
+		sqDevSum += pow((meanSample - arr[index]), 2);
+	}
+
+	double stDev = sqrt(sqDevSum / double(qty));
+	return stDev;
+}
+
 //converts int, val, to a string
 std::string intToString(int val) {
 	std::stringstream ss;
