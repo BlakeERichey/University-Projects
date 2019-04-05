@@ -49,21 +49,50 @@ def smoothBySD(arr):
       newList.append(arr[i])
   return newList
 
+#threshold 1 stdDev. replaces odd values with avg
+def smoothByAvg(arr):
+  newList = []  #returned values
+  dev = stDev(arr)
+  avg = sum(arr) / len(arr)
+  copyArr = [x for x in arr]
+
+  for i in range(0, len(copyArr)):
+    if( abs(arr[i] - avg) < dev ):
+      newList.append(arr[i])
+    else:
+      newList.append(avg)
+  return newList
+
+def smoothBySdThenAvg(arr):
+  newList = []  #returned values
+  sdDevList = smoothBySD(arr)
+  dev = stDev(arr)
+  avg = sum(sdDevList) / len(sdDevList)
+  copyArr = [x for x in arr]
+
+  for i in range(0, len(copyArr)):
+    if( abs(arr[i] - avg) < dev ):
+      newList.append(arr[i])
+    else:
+      newList.append(avg)
+  return newList
+
 print( "Goal mean:", 250)
 
 #find sample means, try to reduce noise
 def createSample():
   data = []
   for x in range(0, 100):
-    add = random.choice([1,3,5,7,11,13,17,23,31,-1,-3,-5,-7,-11,-13,-17,-23,-31])
+    add = random.choice([1,7,72,37,3,.02,.35,2,112,3,-1,-.25,.25,-3])
     data.append(add + 250)
   return data
 
 data = []
 run = True
 while run:
+  #print(stDev(createSample()))
   data = createSample()
-  if(stDev(data) < 12):
+  if(stDev(data) < 20):
     run = False
 print( "True mean:", sum(data) / len(data) )
 
@@ -85,8 +114,12 @@ binnedData = smoothByBinning(data, 3)
 print("Binned mean:", sum(binnedData) / len(binnedData) )
 print("STD DEV Binned data:", stDev(binnedData))
 
-print('-----JUST TRYING STUFF NOW LOL-----')
-test = smoothBySD(data)
-binnedData = smoothByBinning(test, 3)
-print("Binned mean:", sum(binnedData) / len(binnedData) )
-print("STD DEV Binned data:", stDev(binnedData))
+print('-----Smoothing by Avg-----')
+avgSmooth = smoothByAvg(data)
+print("Binned mean:", sum(avgSmooth) / len(avgSmooth) )
+print("STD DEV Binned data:", stDev(avgSmooth))
+
+print('-----Smoothing by Sd and Avg-----')
+avgSmooth = smoothBySdThenAvg(data)
+print("Binned mean:", sum(avgSmooth) / len(avgSmooth) )
+print("STD DEV Binned data:", stDev(avgSmooth))
