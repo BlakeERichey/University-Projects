@@ -1,0 +1,15 @@
+﻿  Source.cpp
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(98): warning C4838: conversion from 'double' to 'int' requires a narrowing conversion
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(87): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(88): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(89): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(90): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(91): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(92): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(93): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(94): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(95): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(96): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(97): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\myproject\university-projects\c++ projects\association rules\association rules\brichey.h(114): warning C4838: conversion from 'int' to 'double' requires a narrowing conversion
+  Association Rules.vcxproj -> C:\myProject\University-Projects\C++ Projects\Association Rules\Debug\Association Rules.exe
