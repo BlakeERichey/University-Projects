@@ -127,7 +127,7 @@ double distanceArr(int arr[], int arr2[], int arrSize) {
 	for (index; index < arrSize; index++) {
 		distance += pow((arr[index] - arr2[index]), 2);
 	}
-	distance = pow(distance, 1.0 / arrSize);
+	distance = pow(distance, 1.0 / 0.5);
 	return distance;
 }
 
