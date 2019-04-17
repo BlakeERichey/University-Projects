@@ -237,6 +237,16 @@ public class common {
     return hash;
   }
   
+//converts value to an int. if it is not an int value return -1,000,000
+  public static double stringToDouble(String value) {
+    try {
+      double result = Double.parseDouble(value);
+      return result;
+    }catch(NumberFormatException err){
+      return -1000000;
+    }
+  } 
+  
   //converts value to an int. if it is not an int value return -1,000,000
   public static int stringToInt(String value) {
     try {
