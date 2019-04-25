@@ -1,6 +1,9 @@
 //Library of custom functions made by Blake Richey
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import java.io.File;
+import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class common {
   
@@ -34,6 +37,14 @@ public class common {
       rv = true;
     }
     return rv;
+  }
+  
+  //returns if word is contained in a list of strings
+  public static boolean contains(String[] list, String word) {
+	  for(int index = 0; index < list.length; index++) {
+		  if(list[index].equals(word)) { return true; }
+	  }
+	  return false;
   }
   
   //returns true if letter matches any letter in word
@@ -129,10 +140,10 @@ public class common {
     System.out.println(value);
   }
 
-    //val:        string being displayed to user
-	  public static void Output(String msg) {
-	    JOptionPane.showMessageDialog(null, new JTextArea(msg));
-	  }
+  //val:        string being displayed to user
+  public static void Output(String msg) {
+    JOptionPane.showMessageDialog(null, new JTextArea(msg));
+  }
 
   
   //return new string with a minimum length of minLength
@@ -178,6 +189,20 @@ public class common {
       else { rv = arr[x]; }
     }
     System.out.println(rv);
+  }
+  
+  public static String readFile(File myfile) throws FileNotFoundException {
+	  try {
+	      Scanner file = new Scanner(myfile);
+	      String fileContents = "";       //file contents are stored in this variable
+	      while(file.hasNextLine()) {
+	        fileContents += file.nextLine() + "\n";
+	      }
+	      return fileContents;
+	   } catch (FileNotFoundException e) {
+	      throw e;
+	      //e.printStackTrace();
+	   }
   }
   
   //returns word without repeat characters in a row

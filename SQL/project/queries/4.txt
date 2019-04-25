@@ -1,0 +1,14 @@
+Πσρ⋈⋉⋊⟕⟖⟗
+
+Π_Person.Title,
+Person.First_Name,
+Person.Middle_Name,
+Person.Last_Name,
+Person.Street_Address,
+Person.City,
+Person.State,
+Person.Zipcode(
+    σ_Monthly_Salary=G_MAX(Monthly_Salary)(Employee)(
+        (((Employee ⋈ Team) ⋈ Cares) ⋈ Client) ⋈ Person
+    )
+)

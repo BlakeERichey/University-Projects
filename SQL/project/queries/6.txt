@@ -1,0 +1,18 @@
+Πσρ⋈⋉⋊⟕⟖⟗
+
+Π_Person.Title,
+Person.Last_Name,
+Phone_Number.Phone_Number,
+Donor_Donations.Date,
+Donor_Donations.Amount(
+    σ_Donor_Donation.Donor_Id, Donor_Donations.Date=
+        Π_Donot_Id, MAX(Date)(
+            Donor_Id_G_MAX(Date)(Donor_Donations)
+        )
+    ) 
+    ∧ Donor_Donations.Anonymous='Y'
+    ∧ Phone_Number.Primary='Y'
+    ∧ Person.Mail_To='N'(
+        (((Donor ⋈ Donor_Donations) ⋈ Person) ⋈ Phone_Number)
+    )
+)

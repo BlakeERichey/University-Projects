@@ -6,9 +6,7 @@ import javax.swing.*;
 
 public class GUIContainer extends JFrame{
   
-  private JLabel data;
-  private GUIContainer Container;
-  
+  private JLabel data;  
   
   GUIContainer(String title){
     super(title);

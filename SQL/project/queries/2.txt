@@ -1,0 +1,9 @@
+Πσρ⋈⋉⋊⟕⟖⟗
+
+(Π_Person.Title, 
+Person.First_Name,
+Person.Middle_Name,
+Person.Last_Name,
+Doctor.First_Name,
+Doctor.Last_Name
+Doctor.Doctor_Number((Client ⋈ Doctor) ⋈ Person))
