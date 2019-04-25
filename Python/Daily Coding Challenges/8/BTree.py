@@ -90,6 +90,3 @@ class BTree():
         return self.helperFind(currentNode.getLeft(), val)
       elif data < val:
         return self.helperFind(currentNode.getRight(), val)
-
-    
-
