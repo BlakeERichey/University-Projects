@@ -42,7 +42,7 @@ public class common {
   //returns if word is contained in a list of strings
   public static boolean contains(String[] list, String word) {
 	  for(int index = 0; index < list.length; index++) {
-		  if(list[index].equals(word)) { return true; }
+	    if(list[index] != null && list[index].equals(word)) { return true; }
 	  }
 	  return false;
   }
@@ -58,6 +58,18 @@ public class common {
     }
     
     return rv;
+  }
+  
+  //counts number of times a word appears in list of words
+  public static int count(String[] list, String word) {
+    int count = 0;
+    for(int i = 0; i<list.length; i++) {
+      if(list[i] != null && list[i].equals(word)) {
+        count++;
+      }
+    }
+    
+    return count;
   }
   
   //creates new string array of size, size
@@ -191,18 +203,43 @@ public class common {
     System.out.println(rv);
   }
   
-  public static String readFile(File myfile) throws FileNotFoundException {
+  public static String readFile(File myfile, boolean ignoreBlankLines) throws FileNotFoundException {
 	  try {
 	      Scanner file = new Scanner(myfile);
 	      String fileContents = "";       //file contents are stored in this variable
 	      while(file.hasNextLine()) {
-	        fileContents += file.nextLine() + "\n";
+	        String line = file.nextLine();
+	        if(ignoreBlankLines) {
+	          if(!line.equals("")) {
+	            fileContents += line + "\n";
+	          }	          
+	        }else {
+	          fileContents += line + "\n";
+	        }
 	      }
+	      file.close();
 	      return fileContents;
 	   } catch (FileNotFoundException e) {
 	      throw e;
 	      //e.printStackTrace();
 	   }
+  }
+  
+  public static String[] removeDuplicates(String[] arr) {
+    int count = 0;
+    String[] dupFree = new String[arr.length];
+    for(int i = 0; i<arr.length; i++) {
+      if(!contains(dupFree, arr[i])) {
+        dupFree[count++] = arr[i];
+      }
+    }
+    
+    String[] withoutNulls = new String[count];
+    for(int index = 0; index < count; index++) {
+      withoutNulls[index]=dupFree[index];
+    }
+    
+    return withoutNulls;
   }
   
   //returns word without repeat characters in a row

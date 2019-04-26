@@ -4,4 +4,4 @@ WHERE Org_Donations."Date" IN(
   SELECT
     MAX(Org_Donations."Date")
   FROM Org_Donations
-)
+);

@@ -9,4 +9,4 @@ WHERE Volunteer.id = (
     FROM Volunteer
     INNER JOIN Works ON Works.Volunteer_Id=Volunteer.id
   )
-)
+);
