@@ -140,7 +140,6 @@ public class Assignment5 {
 							  run = true;
 						  }
 					  }
-					  e.printStackTrace();
 				  }
 			  }else {
 				  common.Alert("Question not specific enough. I dont understand.");
