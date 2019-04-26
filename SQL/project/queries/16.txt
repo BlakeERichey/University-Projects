@@ -1,0 +1,8 @@
+Π_Donation_Drive.Title,
+Donation_Drive.End_Date,
+Person.Last_Name,
+Employee.Job_Title(
+  σ_Donation_Drive.Title=Π_Donation_Drive.Title(
+    Title_G_SUM_Donor_Donations.Amount(Donation_Drive ⟕ Donor_Donations)
+  )((Donation_Drive ⟕ Employee) ⟕ Person)
+)
