@@ -171,7 +171,6 @@ public class Assignment5 {
   }
   
   public static String findSecondMostFreuqent(String[] list, String query, String[] answersArr) {
-	common.printArr(answersArr);
     int count = 0;
     String word = "";
     String mostCommon = findMostFrequent(list, query, answersArr);
