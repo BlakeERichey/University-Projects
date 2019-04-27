@@ -1,0 +1,6 @@
+Πσρ⋈⋉⋊⟕⟖⟗∧
+Employee ← Π_id, Person_Id, Monthly_Salary, Marital_Status, Job_Title, Date_Hired, Type(
+  σ_Employee.id=(Π_Employee.id(Team ⋈ Employee)) ∧ Employee.id_G_COUNT(Team.Name)((Team ⋈ Employee)) > 1(
+    Employee
+  )
+)

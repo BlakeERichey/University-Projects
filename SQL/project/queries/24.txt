@@ -1,0 +1,6 @@
+Πσρ⋈⋉⋊⟕⟖⟗∧
+Volunteer ← Π_id, Person_Id, Date_Joined(Volunteer)
+-
+Π_id, Person_Id, Date_Joined(
+  σ_Works.Hours = G_MIN(Hours)(Volunteer ⋈ Works)
+)

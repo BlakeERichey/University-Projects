@@ -1,0 +1,5 @@
+Πσρ⋈⋉⋊⟕⟖⟗∧
+
+Org_Donations <- Π_id, Org_Name, 2*Amount, Type, "Date", Anonymous(
+  σ_"Date"=G_MAX("Date")(Org_Donations)
+)(Org_Donations)
