@@ -18,7 +18,7 @@ def classify(matrix):
 
   classifier = int(input("Enter class to get results (1, 2, 3...): ")) #class to find values on
   if(classifier > len(matrix)):
-    return "Invalid Entry"
+    return {}
   
   #GENERATE 2D CONFUSION MATRIX
   classifierMatrix = [[], []]
@@ -42,6 +42,12 @@ def classify(matrix):
     samples += sum(matrix[i])
   currentSum = classifierMatrix[0][0] + classifierMatrix[0][1] + classifierMatrix[1][0]
   classifierMatrix[1].append(samples - currentSum) #was not classifier and correctly guess was not
+
+
+  #DISPLAY 2D CONFUSION MATRIX
+  print('Confusion Matrix of Class', classifier)
+  for row in classifierMatrix:
+    print(row)
 
   #FIND VALUES
   accuracy    = (classifierMatrix[0][0] + classifierMatrix[1][1]) / float(samples)
@@ -70,6 +76,11 @@ def main():
     [1, 6, 18]
   ]
 
+  print('Confusion Matrix:')
+  for row in matrix:
+    print(row)
+
+  print('') #formatting
   values = classify(matrix)
 
   for entry in values:
