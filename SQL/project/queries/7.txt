@@ -1,0 +1,14 @@
+Πσρ⋈⋉⋊⟕⟖⟗∧
+
+Π_Person.First_Name,
+Person.Middle_Name, 
+Person.Last_Name, 
+VolunteerPerson.First_Name, 
+VolunteerPerson.Middle_Name, 
+VolunteerPerson.Last_Name, 
+Volunteer.Date_Joined,
+Team.Name(
+  σ_Person.Gender!=VolunteerPerson.Gender(
+    (((((Client ⋈ Cares) ⋈ Team) ⋈ Works) ⋈ Volunteer) ⋈ Person as VolunteerPerson) ⋈ Person
+  )
+)
