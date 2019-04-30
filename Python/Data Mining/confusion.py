@@ -15,33 +15,42 @@ def formatPercentage(num, precision):
 
 #finds values of accuracy, error rate. etc of a passed in cofusion matrix
 def classify(matrix):
-
-  classifier = int(input("Enter class to get results (1, 2, 3...): ")) #class to find values on
-  if(classifier > len(matrix)):
+  #Invalid matrix
+  if len(matrix) <= 1:
     return {}
-  
+
   #GENERATE 2D CONFUSION MATRIX
+  samples = 0 #number of records in matrix
+  classifier = None #class to break 3d or greater matrixes on
   classifierMatrix = [[], []]
-  classifierMatrix[0].append(matrix[classifier-1][classifier-1])  #correctly classified as classifier
+  if len(matrix) == 2:
+    classifierMatrix = matrix
+    for row in matrix:
+      samples += sum(row)
+  else:
+    classifier = int(input("Enter class to get results (1, 2, 3...): ")) #class to find values on
+    if(classifier > len(matrix)):
+      return {}
 
-  currentVal = 0  #value to add to 2d matrix
-  for i, val in enumerate(matrix[classifier-1]):
-    if i != classifier-1:
-      currentVal += val
-  classifierMatrix[0].append(currentVal) #guess was not classifier but really was
+    classifierMatrix[0].append(matrix[classifier-1][classifier-1])  #correctly classified as classifier
 
-  currentVal = 0
-  for i in range((len(matrix))):
-    val = matrix[i][classifier-1]
-    if i != classifier - 1:
-      currentVal+= val
-  classifierMatrix[1].append(currentVal) #guessed was classifier but was really not
+    currentVal = 0  #value to add to 2d matrix
+    for i, val in enumerate(matrix[classifier-1]):
+      if i != classifier-1:
+        currentVal += val
+    classifierMatrix[0].append(currentVal) #guess was not classifier but really was
 
-  samples = 0
-  for i in range(len(matrix)):
-    samples += sum(matrix[i])
-  currentSum = classifierMatrix[0][0] + classifierMatrix[0][1] + classifierMatrix[1][0]
-  classifierMatrix[1].append(samples - currentSum) #was not classifier and correctly guess was not
+    currentVal = 0
+    for i in range((len(matrix))):
+      val = matrix[i][classifier-1]
+      if i != classifier - 1:
+        currentVal+= val
+    classifierMatrix[1].append(currentVal) #guessed was classifier but was really not
+
+    for i in range(len(matrix)):
+      samples += sum(matrix[i])
+    currentSum = classifierMatrix[0][0] + classifierMatrix[0][1] + classifierMatrix[1][0]
+    classifierMatrix[1].append(samples - currentSum) #was not classifier and correctly guess was not
 
 
   #DISPLAY 2D CONFUSION MATRIX
