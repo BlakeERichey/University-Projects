@@ -1,0 +1,24 @@
+def packing(*l):
+  print(l)
+
+def unpacking(x, y, z):
+  print(x, y, z)
+
+def keywords(a, b, x, y):
+  print(a, b, x, y)
+
+packing('a', 'b', 'c')
+L = [4,5,6]
+unpacking(*L)
+
+#keyword arguements
+d = {'a':'append', 'b':'block','x':'extract','y':'yes'}
+keywords(**d)
+
+def passfunc(demo):
+  demo('passed into passfunc')
+
+def demo(msg):
+  print(msg)
+
+passfunc(demo)
