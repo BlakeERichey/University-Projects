@@ -1,3 +1,4 @@
+#find arbitrages via exchange rates dynamically
 from BRQueue import Queue
 
 from itertools import chain, combinations
