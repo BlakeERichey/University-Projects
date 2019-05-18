@@ -17,6 +17,7 @@ class CSV():
   def loadFromFile(self, filename):
     with open(filename) as file:
       data = file.read()
+      self.string=data
       lines = data.splitlines()
       table = []
       for line in lines:
@@ -34,3 +35,7 @@ class CSV():
   def save(self, filename):
     with open(filename, 'w') as file:
       file.write(self.string)
+
+csv=CSV(None)
+csv.loadFromFile('blake.csv')
+print(csv)
