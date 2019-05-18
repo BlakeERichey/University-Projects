@@ -14,7 +14,7 @@ class RunningMedian():
     else:
       index=int(length/2)
       print((self.vals[index]+self.vals[index-1])/2)
-L=[2, 1, 5, 7, 2, 0, 5]
+L=[1,3,10,10]
 start=RunningMedian()
 for x in L:
   start.add(x)
