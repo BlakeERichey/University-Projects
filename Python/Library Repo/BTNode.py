@@ -22,4 +22,3 @@ class BTNode():
 
   def isLeaf(self):
     return self.left == None and self.right == None
-    
