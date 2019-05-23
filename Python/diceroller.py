@@ -1,5 +1,8 @@
 import random, statistics
 
+def avg(L):
+  return (sum(L)/len(L),0)[len(L) == 0]
+
 def roll(maxVal, rolls):
   return [random.choice(range(1,maxVal+1)) for roll in range(rolls)]
 
@@ -15,6 +18,7 @@ def getCharacterStats():
     stats.append(sum(getAttribute()))
   return stats
 
-count = 1
 stats = getCharacterStats()
+while avg(stats)<15:
+  stats=getCharacterStats()
 print(stats)
