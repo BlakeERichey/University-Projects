@@ -23,3 +23,24 @@ def powersets(iterable):
   for key, val in enumerate(comb_list):
     D[key] = val
   return D
+
+#rounds number to the nearest value `nearest`
+#`nearest` must be between 0-1
+def round_nearest(number, nearest=.05):
+  lower  = number // 1 #lower limit
+  upper  = lower +1    #upper limit
+
+  values = []          #possible values
+  curVal = lower
+  while curVal <= upper:
+    values.append(curVal)
+    curVal=truncate_number(curVal + nearest)
+  
+  if upper not in values:
+    values.append(upper)
+  
+  distance = []        #distance to each possible value
+  for value in values:
+    distance.append(abs(number-value))
+  print(values)
+  return values[distance.index(min(distance))]
