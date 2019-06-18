@@ -24,6 +24,12 @@ def powersets(iterable):
     D[key] = val
   return D
 
+#removes imprecision issues with floats: 1-.1 = .900000000001 => 1-.1 = .9
+def truncate_number(f_number, n_decimals=9):
+  strFormNum = "{0:." + str(n_decimals+5) + "f}"
+  trunc_num  = float(strFormNum.format(f_number)[:-5])
+  return(trunc_num)
+
 #rounds number to the nearest value `nearest`
 #`nearest` must be between 0-1
 def round_nearest(number, nearest=.05):
