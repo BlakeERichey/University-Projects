@@ -56,10 +56,10 @@ def rgb_to_hex(rgb):
   if len(rgb) == 3:
     valid = True
     for val in rgb:
-      if not(val and type(val) == int and 0<val<=255):
+      if not(val != None and type(val) == int and 0<=val<=255):
         valid = False
         break
-    
+        
     if valid:
       as_hex = '#%02x%02x%02x' % (rgb[0], rgb[1], rgb[2])
     else: #invalid values
