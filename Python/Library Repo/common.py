@@ -66,3 +66,16 @@ def rgb_to_hex(rgb):
       as_hex = '#000000'
     
     return as_hex
+
+def silence_function(func, *args, **kwargs):
+  '''
+    Replaces stdout temporarily to silence print statements inside a function
+  '''
+  #mask standard output
+  actualstdout = sys.stdout
+  sys.stdout   = StringIO()
+
+  try:
+    func(*args, **kwargs)
+  finally: #set stdout but dont catch error
+    sys.stdout = actualstdout
