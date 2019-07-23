@@ -1,3 +1,6 @@
+import io, sys
+from   io import StringIO
+
 #normalizes a set of data between a range
 def normalize(data, rangeMin, rangeMax):
   if(rangeMin>rangeMax):
@@ -79,3 +82,21 @@ def silence_function(func, *args, **kwargs):
     func(*args, **kwargs)
   finally: #set stdout but dont catch error
     sys.stdout = actualstdout
+
+def paths_to_leaves(tree):
+  '''
+    Calls collect_paths to find all paths from root of a tree to its leaves
+  '''
+  d = {'paths': []}
+  collect_paths(tree.root, [], d)
+  return d['paths']
+
+
+def collect_paths(node, path, d):
+  if node:
+    path = path + [node.data]
+    if node.getLeft() == None and node.getRight() == None:
+      d['paths'].append(path)
+    else:
+      collect_paths(node.getLeft(), path, d)
+      collect_paths(node.getRight(), path, d)

@@ -31,6 +31,8 @@ class Stack():
   def isEmpty(self):
     return self.head == None
 
+'''
+#Test
 newStack = Stack(2)
 newStack.push(3)
 newStack.push(4)
@@ -52,3 +54,4 @@ while removeFromStack == True:
     print(newStack.pop())
   s.sleep(.2)
   time += 1
+'''
