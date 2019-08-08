@@ -83,6 +83,14 @@ def silence_function(func, *args, **kwargs):
   finally: #set stdout but dont catch error
     sys.stdout = actualstdout
 
+def find_closest(arr, val):
+  '''finds closest value in arr to val'''
+  vals = arr.tolist()
+  distances = [abs(vals[i] - val) for i in range(len(vals))]
+  return vals[distances.index(min(distances))]
+
+#--------------------------------Tree Functions--------------------------------
+
 def paths_to_leaves(tree):
   '''
     Calls collect_paths to find all paths from root of a tree to its leaves
