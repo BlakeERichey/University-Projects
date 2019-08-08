@@ -1,4 +1,4 @@
-import io, sys
+import io, sys, json
 from   io import StringIO
 
 #normalizes a set of data between a range
@@ -88,6 +88,18 @@ def find_closest(arr, val):
   vals = arr.tolist()
   distances = [abs(vals[i] - val) for i in range(len(vals))]
   return vals[distances.index(min(distances))]
+
+def save_json(obj, filename):
+  '''save obj to filename. obj is expected to be a json format'''
+  with open(filename, 'w+') as f:
+    json.dump(obj, f)
+
+def load_json(filename):
+  '''returns dictionary with json data'''
+  with open(filename, 'r') as f:
+    obj = json.loads(f.read())
+  
+    return obj
 
 #--------------------------------Tree Functions--------------------------------
 
