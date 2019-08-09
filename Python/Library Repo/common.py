@@ -120,3 +120,42 @@ def collect_paths(node, path, d):
     else:
       collect_paths(node.getLeft(), path, d)
       collect_paths(node.getRight(), path, d)
+
+def get_next(item_num, dir):
+  '''
+    returns next node number in tree in dir specified
+        0      level: 0
+      / \    
+      1   2           1
+    / \ / \
+    3  4 5  6         2
+
+    get_next(2, 'left') => 5
+    get_next(1, 'right') => 4 
+  '''
+  item_num   = int(item_num)
+  level, pos = get_level(item_num)
+  next_level = pow(2, level+1) #items in next level
+  add        = next_level-(pow(2, level)-pos)
+  left       = item_num + add
+  
+  return (left, left+1)[dir=='right']
+      
+def get_level(curNum):
+  '''
+    helper function to get level and pos of a number in a binary tree
+        0      level: 0
+      / \    
+      1   2           1
+    / \ / \
+    3  4 5  6         2
+
+  get_level(2) => 1, 1
+  get_level(4) => 2, 1 
+  '''
+  curNum = int(curNum)
+  level = 0
+  while pow(2, level+1) <= curNum+1:
+    level+=1
+  pos = curNum - pow(2, level) + 1 #0 indexed
+  return level, pos
