@@ -1,4 +1,5 @@
 import io, sys, json
+import numpy as np
 from   io import StringIO
 
 #normalizes a set of data between a range
@@ -101,6 +102,25 @@ def load_json(filename):
   
     return obj
 
+def flatten(iter):
+  '''
+    flatten an iterable into a 1d numpy array
+  '''
+  if type(iter) == dict:
+    return np.array(list(iter.values())).reshape(1, -1)[0]
+  elif type(iter) == list:
+    return np.array(iter).reshape(1, -1)[0]
+
+def get_sums(d):
+  '''
+    sum `d`, dictionary of list, on col axis into a list
+  '''
+  i = len(d)
+  j = len(list(d.values())[0])
+  s = flatten(d)
+  return list(np.sum(s.reshape(i, j), axis=0))
+
+  
 #--------------------------------Tree Functions--------------------------------
 
 def paths_to_leaves(tree):
@@ -159,3 +179,11 @@ def get_level(curNum):
     level+=1
   pos = curNum - pow(2, level) + 1 #0 indexed
   return level, pos
+
+def get_parent(curNum):
+  '''
+   get parent node number from binary tree locations
+  '''
+  if curNum < 1:
+    return None
+  return (curNum-1)//2
