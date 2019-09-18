@@ -28,6 +28,16 @@ def powersets(iterable):
     D[key] = val
   return D
 
+def combinations(iterable, trials):
+  '''
+    returns all possible combinations including variables in `iterable`
+    with exactly `trials` number of instances
+
+    combinations(['h', 't'], 2) -> [('h', 'h'), ('h', 't'), ('t', 'h'), ('t', 't')]
+  '''
+  import itertools
+  return list(itertools.product(iterable, repeat=trials))
+
 #removes imprecision issues with floats: 1-.1 = .900000000001 => 1-.1 = .9
 def truncate_number(f_number, n_decimals=9):
   strFormNum = "{0:." + str(n_decimals+5) + "f}"
