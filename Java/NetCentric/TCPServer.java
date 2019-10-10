@@ -32,31 +32,43 @@ public class TCPServer
 				   DataInputStream in = new DataInputStream(connectionSocket.getInputStream()); //get incoming data in bytes from connection socket
 				   
 				   byte[] packet = new byte[1000];
-				   in.readFully(packet); //read contents of packet sent from client
-				   boolean valid = true; //received packet has correct contents 
-				   for(int i = 0; i<1000; i++) {
-				     if(i%2 == 0) {
-				       if(packet[i] == 0) {
-				         valid = false;				         
-				       }
-				     }else if((i+1)%2 == 0){
-				       if(packet[i] == 1) {
-                                         valid = false;                                  
-                                       }
-				     }
+				   int num_bytes = in.read(packet, 0, 1000); //read contents of packet sent from client
+//				   System.out.println("Bytes:" + num_bytes);
+				   boolean valid = true; //received packet has correct contents
+				   
+				   if(num_bytes != 1000) {
+					   valid = false;
+				   }else {
+					   
+					   //validate packet information
+					   for(int i = 0; i<1000; i++) {
+						   if(i%2 == 0) {
+							   if(packet[i] == 0) {
+								   valid = false;				         
+							   }
+						   }else if((i+1)%2 == 0){
+							   if(packet[i] == 1) {
+								   valid = false;                                  
+							   }
+						   }
+					   }
 				   }
 				   
-				   System.out.println("Valid: " + valid);
-				   for(int i=0; i<1000; i++) {
-				     System.out.print(packet[i]);
+//				   print packet information
+//				   System.out.println("Valid: " + valid);
+//				   for(int i=0; i<1000; i++) {
+//				     System.out.print(packet[i]);
+//				   }
+//				   System.out.println();
+				   if(num_bytes > 0) {
+					   System.out.println("RECEIVED: from IPAddress " + 
+							   connectionSocket.getInetAddress() + " and from port " + connectionSocket.getPort());					   
 				   }
-				   System.out.println();
-				   
-				   System.out.println("RECEIVED: from IPAddress " + 
-							connectionSocket.getInetAddress() + " and from port " + connectionSocket.getPort());
 				   DataOutputStream out = new DataOutputStream(connectionSocket.getOutputStream()); //setup a stream for outgoing bytes of data
 				   if(!valid) {
-				     System.out.println("Invalid packet structure.");
+					 if(num_bytes > 0) {
+						 System.out.println("Invalid packet structure.");						 
+					 }
 				   }else {
 				     
 				     out.write(packet); //echo packet				     
@@ -64,7 +76,7 @@ public class TCPServer
 				   
 //				   connectionSocket.close();  //close connection socket after this exchange
 				   
-				   System.out.println();
+//				   System.out.println();
 			     } catch (SocketException se) {
 			       connectionSocket.close();
 	                       System.out.println("TCP Server waiting for client on port " + serverSocket.getLocalPort() + "...");

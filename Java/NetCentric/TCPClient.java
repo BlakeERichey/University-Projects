@@ -9,8 +9,9 @@ public class TCPClient
 	public static void main(String[] args) 
 	{
 		String serverName = "localhost";
-		//String serverName = "192.168.1.135";
+//		String serverName = "129.114.230.129";
 		int port = 8000;
+		int packet_size = 1000;
 		DecimalFormat formatter1 = new DecimalFormat("#.#");
 		DecimalFormat formatter2 = new DecimalFormat("#.##");
 		
@@ -27,12 +28,12 @@ public class TCPClient
 			
 			DataOutputStream out = new DataOutputStream(outToServer);
 			
-			byte[] bytes = new byte[1000];
+			byte[] bytes = new byte[packet_size];
 			byte val = 1;
-			for(int i=0; i<1000; i++) {
+			for(int i=0; i<packet_size; i++) {
 			  bytes[i] = val;
 			  if(val == 1) {
-			    val = 1;
+			    val = 0;
 			  }else {
 			    val = 1;
 			  }
@@ -49,12 +50,12 @@ public class TCPClient
 			    
 			    DataInputStream in = new DataInputStream(inFromServer);
 			    
-			    byte[] packet = new byte[1000];
+			    byte[] packet = new byte[packet_size];
 			    
 			    boolean valid = true; //validate packet has correct contents 
 			    try {
 			      in.readFully(packet); //read contents of packet sent from client
-			      for(int i = 0; i<1000; i++) {
+			      for(int i = 0; i<packet_size; i++) {
 			        if(i%2 == 0) {
 			          if(packet[i] == 0) {
 			            valid = false;                                  
