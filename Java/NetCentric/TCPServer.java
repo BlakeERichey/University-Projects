@@ -57,9 +57,6 @@ public class TCPServer
 				   DataOutputStream out = new DataOutputStream(connectionSocket.getOutputStream()); //setup a stream for outgoing bytes of data
 				   if(!valid) {
 				     System.out.println("Invalid packet structure.");
-				     byte[] invalid = new byte[1];
-				     invalid[0] = -1;
-				     out.write(invalid);
 				   }else {
 				     
 				     out.write(packet); //echo packet				     
@@ -76,6 +73,9 @@ public class TCPServer
 	                       // creates a connection socket for communication
 	                       System.out.println("Just connected server port # " + connectionSocket.getLocalSocketAddress() + " to client port # " + connectionSocket.getRemoteSocketAddress());
 	                       timeout = System.currentTimeMillis();
+			     } catch (EOFException streamend) {
+			       connectionSocket.close();
+			       //stream fully processed
 			     }
 			   }
 	

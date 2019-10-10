@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
+import java.text.DecimalFormat;
 
 public class TCPClient 
 {
@@ -10,12 +11,15 @@ public class TCPClient
 		String serverName = "localhost";
 		//String serverName = "192.168.1.135";
 		int port = 8000;
+		DecimalFormat formatter1 = new DecimalFormat("#.#");
+		DecimalFormat formatter2 = new DecimalFormat("#.##");
 		
 		try 
 		{
 			System.out.println("Connecting to " + serverName + " on port " + port);
 			
 			Socket clientSocket = new Socket(serverName, port);  //create socket for connecting to server
+			clientSocket.setSoTimeout(1000);
 			
 			System.out.println("Just connected to " + clientSocket.getRemoteSocketAddress());
 			
@@ -28,7 +32,7 @@ public class TCPClient
 			for(int i=0; i<1000; i++) {
 			  bytes[i] = val;
 			  if(val == 1) {
-			    val = 0;
+			    val = 1;
 			  }else {
 			    val = 1;
 			  }
@@ -36,47 +40,61 @@ public class TCPClient
 			
 			double startTime = System.nanoTime();
 			double alpha = startTime;
+			int index = 0;
+			double[] rtts = new double[10];
 			for(int packets_sent=0; packets_sent<10; packets_sent++) {
-			  out.write(bytes);
-			  out.write(bytes);
-			  
-			  InputStream inFromServer = clientSocket.getInputStream();  //stream of bytes
-			  
-			  DataInputStream in = new DataInputStream(inFromServer);
-			 
-			  byte[] packet = new byte[1000];
-			  
-			  boolean valid = true; //validate packet has correct contents 
 			  try {
-			    in.readFully(packet); //read contents of packet sent from client
-			    for(int i = 0; i<1000; i++) {
-			      if(i%2 == 0) {
-			        if(packet[i] == 0) {
-			          valid = false;                                  
+			    out.write(bytes);			    
+			    InputStream inFromServer = clientSocket.getInputStream();  //stream of bytes
+			    
+			    DataInputStream in = new DataInputStream(inFromServer);
+			    
+			    byte[] packet = new byte[1000];
+			    
+			    boolean valid = true; //validate packet has correct contents 
+			    try {
+			      in.readFully(packet); //read contents of packet sent from client
+			      for(int i = 0; i<1000; i++) {
+			        if(i%2 == 0) {
+			          if(packet[i] == 0) {
+			            valid = false;                                  
+			          }
+			        }else if((i+1)%2 == 0){
+			          if(packet[i] == 1) {
+			            valid = false;                                  
+			          }
 			        }
-			      }else if((i+1)%2 == 0){
-			        if(packet[i] == 1) {
-			          valid = false;                                  
-			        }
-			      }
-			    }			    
-			  } catch (IndexOutOfBoundsException ie) {
-			    ie.printStackTrace();
-			    valid = false;
+			      }			    
+			    } catch (IndexOutOfBoundsException ie) {
+			      ie.printStackTrace();
+			      valid = false;
+			    }
+			    
+			    if(!valid) {
+			      System.out.println("Invalid packet structure.");                                
+			    }else {
+			      double endTime = System.nanoTime();
+			      double rtt = endTime - alpha;
+			      alpha = endTime;
+			      
+			      rtts[index++] = rtt;
+			      System.out.println("TCP Server sent a valid response after: " + formatter2.format(rtt/1000000) + "ms");
+			    }
+			  } catch (SocketTimeoutException timeout) {
+			    System.out.println("No response...");
 			  }
 			  
-			  if(!valid) {
-			    System.out.println("Invalid packet structure.");                                
-			  }else {
-			    double endTime = System.nanoTime();
-			    double rtt = endTime - alpha;
-			    alpha = endTime;
-			    
-			    System.out.println("TCP Server sent a valid response after: " + rtt/1000000 + "ms");
-			  }
 			}
 			
 			clientSocket.close();
+			
+			int sum = 0;
+			for(int i=0; i<10; i++) {
+			  sum += rtts[i];
+			}
+			double avg_rtt = sum/10.0/1000000;
+			System.out.println("Average RTT: " + formatter2.format(avg_rtt) + "ms");
+			System.out.println("Average Data Rate: " + (avg_rtt > 0?formatter1.format(80000000/avg_rtt):"0"));
 			
 		} 
 		catch (IOException e)
