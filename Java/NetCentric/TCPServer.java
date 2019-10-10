@@ -1,3 +1,11 @@
+// Blake Richey
+// 10/10/2019
+// Dr Subramanian - Net Centric
+// A server version of a TCP pinger. Creates a connection to the client code and receives 
+// any packets the client sends. reads the first 1000 bytes and validates the
+// structure of the packet is 101010....0. If the packet is valid, echos the packet
+// back to the client. Closes connection after 10 seconds.
+
 import java.net.*;
 import java.io.*;
 
@@ -24,8 +32,7 @@ public class TCPServer
 			   while (true)
 			   {
 			     try {
-//			           System.out.println("Elapsed Time:" + (System.currentTimeMillis() - timeout));
-				   if(System.currentTimeMillis() - timeout > 10000) {
+				   if(System.currentTimeMillis() - timeout > 10000) { //set connection limit of 10 seconds
 				     timeout = System.currentTimeMillis();
 				     throw new SocketException();
 				   }
@@ -33,7 +40,6 @@ public class TCPServer
 				   
 				   byte[] packet = new byte[1000];
 				   int num_bytes = in.read(packet, 0, 1000); //read contents of packet sent from client
-//				   System.out.println("Bytes:" + num_bytes);
 				   boolean valid = true; //received packet has correct contents
 				   
 				   if(num_bytes != 1000) {
@@ -76,18 +82,17 @@ public class TCPServer
 				   
 //				   connectionSocket.close();  //close connection socket after this exchange
 				   
-//				   System.out.println();
 			     } catch (SocketException se) {
 			       connectionSocket.close();
-	                       System.out.println("TCP Server waiting for client on port " + serverSocket.getLocalPort() + "...");
-	                           
-	                       connectionSocket = serverSocket.accept();  //listens for connection and 
-	                       // creates a connection socket for communication
-	                       System.out.println("Just connected server port # " + connectionSocket.getLocalSocketAddress() + " to client port # " + connectionSocket.getRemoteSocketAddress());
-	                       timeout = System.currentTimeMillis();
+                   System.out.println("TCP Server waiting for client on port " + serverSocket.getLocalPort() + "...");
+                       
+                   connectionSocket = serverSocket.accept();  //listens for connection and 
+                   // creates a connection socket for communication
+                   System.out.println("Just connected server port # " + connectionSocket.getLocalSocketAddress() + " to client port # " + connectionSocket.getRemoteSocketAddress());
+                   timeout = System.currentTimeMillis();
 			     } catch (EOFException streamend) {
+		    	   //stream fully processed
 			       connectionSocket.close();
-			       //stream fully processed
 			     }
 			   }
 	
