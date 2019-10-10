@@ -20,10 +20,10 @@ class BTNode():
     return self.right
 
   def setLeft(self, newVal):
-    self.left = newVal
+    self.left = BTNode(newVal)
 
   def setRight(self, newVal):
-    self.right = newVal
+    self.right = BTNode(newVal)
 
   def isLeaf(self):
     return self.left == None and self.right == None

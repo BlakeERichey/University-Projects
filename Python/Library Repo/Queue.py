@@ -46,7 +46,8 @@ class Queue():
         currentNode = currentNode.next
       return vals
 
-
+'''
+#Test
 L = Queue()
 L.enqueue(5)
 L.enqueue(4)
@@ -61,3 +62,4 @@ L.enqueue(6)
 print('Front', L.front())
 print(L.isEmpty())
 print(L.getList())
+'''
