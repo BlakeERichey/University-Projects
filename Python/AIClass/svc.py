@@ -2,37 +2,26 @@ from sklearn import datasets
 import numpy as np
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
-iris = datasets.load_boston()
-print(iris)
-inx = iris.feature_names.tolist().index('RM')
+iris = datasets.load_iris()
+# print(iris)
 
-X = iris.data[:, inx:inx+1]
+X = iris.data
 y = iris.target
 
+X, X_valid, y, y_valid = train_test_split(X, y, test_size=.30, random_state=1)
+
 sc_x = StandardScaler()
-sc_y = StandardScaler()
+sc_x_valid = StandardScaler()
 
 X_std = sc_x.fit_transform(X)
-y_std = sc_y.fit_transform(y[:, np.newaxis]).flatten()
+X_std_valid = sc_x_valid.fit_transform(X_valid)
 
-
-def lin_regplot(X, y, model):
-    print('X, y:', X.size, y.size)
-    plt.scatter(X, y, c='steelblue', edgecolor='white', s=70)
-    X_new = []
-    y_new = []
-    for i in range(len(y)):
-        X_new.append(X[i])
-        y_new.append(model.predict(X[i].reshape(1, -1)))
-    plt.plot(X_new, y_new, color='black', lw=2)
-    return None
-
-slr = LinearRegression()
-slr.fit(X_std, y_std)
-y_pred = slr.predict(X_std)
-lin_regplot(X_std, y_std, slr)
-print('R2:', r2_score(y_std, y_pred))
+svm = SVC(degree=10, random_state=10, verbose=1, tol=1E-3, kernel='linear')
+svm.fit(X_std, y)
+y_pred = svm.predict(X_std_valid)
+print('Accuracy:', accuracy_score(y_valid, y_pred))
